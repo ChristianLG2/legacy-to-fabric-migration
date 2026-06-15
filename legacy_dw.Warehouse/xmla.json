@@ -1,0 +1,804 @@
+{
+  "name": "{{Dataset_Name}}",
+  "compatibilityLevel": 1604,
+  "model": {
+    "name": "{{Dataset_Name}}",
+    "culture": "en-US",
+    "collation": "Latin1_General_100_BIN2_UTF8",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "assessments",
+        "sourceLineageTag": "[dbo].[assessments]",
+        "columns": [
+          {
+            "name": "code_module",
+            "dataType": "string",
+            "sourceColumn": "code_module",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_module",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "code_presentation",
+            "dataType": "string",
+            "sourceColumn": "code_presentation",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_presentation",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "id_assessment",
+            "dataType": "string",
+            "sourceColumn": "id_assessment",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_assessment",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "assessment_type",
+            "dataType": "string",
+            "sourceColumn": "assessment_type",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "assessment_type",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "date",
+            "dataType": "string",
+            "sourceColumn": "date",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "date",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "weight",
+            "dataType": "string",
+            "sourceColumn": "weight",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "weight",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "assessments",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "courses",
+        "sourceLineageTag": "[dbo].[courses]",
+        "columns": [
+          {
+            "name": "code_module",
+            "dataType": "string",
+            "sourceColumn": "code_module",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_module",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "code_presentation",
+            "dataType": "string",
+            "sourceColumn": "code_presentation",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_presentation",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "module_presentation_length",
+            "dataType": "string",
+            "sourceColumn": "module_presentation_length",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "module_presentation_length",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "courses",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "studentAssessment",
+        "sourceLineageTag": "[dbo].[studentAssessment]",
+        "columns": [
+          {
+            "name": "id_assessment",
+            "dataType": "string",
+            "sourceColumn": "id_assessment",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_assessment",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "id_student",
+            "dataType": "string",
+            "sourceColumn": "id_student",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_student",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "date_submitted",
+            "dataType": "string",
+            "sourceColumn": "date_submitted",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "date_submitted",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "is_banked",
+            "dataType": "string",
+            "sourceColumn": "is_banked",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "is_banked",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "score",
+            "dataType": "string",
+            "sourceColumn": "score",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "score",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "studentAssessment",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "studentInfo",
+        "sourceLineageTag": "[dbo].[studentInfo]",
+        "columns": [
+          {
+            "name": "code_module",
+            "dataType": "string",
+            "sourceColumn": "code_module",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_module",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "code_presentation",
+            "dataType": "string",
+            "sourceColumn": "code_presentation",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_presentation",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "id_student",
+            "dataType": "string",
+            "sourceColumn": "id_student",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_student",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "gender",
+            "dataType": "string",
+            "sourceColumn": "gender",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "gender",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "region",
+            "dataType": "string",
+            "sourceColumn": "region",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "region",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "highest_education",
+            "dataType": "string",
+            "sourceColumn": "highest_education",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "highest_education",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "imd_band",
+            "dataType": "string",
+            "sourceColumn": "imd_band",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "imd_band",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "age_band",
+            "dataType": "string",
+            "sourceColumn": "age_band",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "age_band",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "num_of_prev_attempts",
+            "dataType": "string",
+            "sourceColumn": "num_of_prev_attempts",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "num_of_prev_attempts",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "studied_credits",
+            "dataType": "string",
+            "sourceColumn": "studied_credits",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "studied_credits",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "disability",
+            "dataType": "string",
+            "sourceColumn": "disability",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "disability",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "final_result",
+            "dataType": "string",
+            "sourceColumn": "final_result",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "final_result",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "studentInfo",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "studentRegistration",
+        "sourceLineageTag": "[dbo].[studentRegistration]",
+        "columns": [
+          {
+            "name": "code_module",
+            "dataType": "string",
+            "sourceColumn": "code_module",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_module",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "code_presentation",
+            "dataType": "string",
+            "sourceColumn": "code_presentation",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_presentation",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "id_student",
+            "dataType": "string",
+            "sourceColumn": "id_student",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_student",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "date_registration",
+            "dataType": "string",
+            "sourceColumn": "date_registration",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "date_registration",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "date_unregistration",
+            "dataType": "string",
+            "sourceColumn": "date_unregistration",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "date_unregistration",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "studentRegistration",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "studentVle",
+        "sourceLineageTag": "[dbo].[studentVle]",
+        "columns": [
+          {
+            "name": "code_module",
+            "dataType": "string",
+            "sourceColumn": "code_module",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_module",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "code_presentation",
+            "dataType": "string",
+            "sourceColumn": "code_presentation",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_presentation",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "id_student",
+            "dataType": "string",
+            "sourceColumn": "id_student",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_student",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "id_site",
+            "dataType": "string",
+            "sourceColumn": "id_site",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_site",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "date",
+            "dataType": "string",
+            "sourceColumn": "date",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "date",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "sum_click",
+            "dataType": "string",
+            "sourceColumn": "sum_click",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "sum_click",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "studentVle",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "vle",
+        "sourceLineageTag": "[dbo].[vle]",
+        "columns": [
+          {
+            "name": "id_site",
+            "dataType": "string",
+            "sourceColumn": "id_site",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_site",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "code_module",
+            "dataType": "string",
+            "sourceColumn": "code_module",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_module",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "code_presentation",
+            "dataType": "string",
+            "sourceColumn": "code_presentation",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "code_presentation",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "activity_type",
+            "dataType": "string",
+            "sourceColumn": "activity_type",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "activity_type",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "week_from",
+            "dataType": "string",
+            "sourceColumn": "week_from",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "week_from",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "week_to",
+            "dataType": "string",
+            "sourceColumn": "week_to",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "week_to",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "vle",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DatabaseQuery",
+        "kind": "m",
+        "expression": "let\n    database = {{TDS_Endpoint}}\nin\n    database\n"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "SourceLineageTagType",
+        "value": "DatabaseFullyQualifiedName"
+      }
+    ]
+  }
+}
