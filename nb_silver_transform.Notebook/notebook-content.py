@@ -26,8 +26,9 @@
 # CELL ********************
 
 # Import libraries
-from pyspark.sql.functions import col
-from pyspark.sql.functions import when
+from pyspark.sql import functions as F
+from pyspark.sql.window import Window
+
 
 
 # METADATA ********************
@@ -77,15 +78,16 @@ df_student.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.stude
 
 # CELL ********************
 
+# studentRegistration table
 df_registration = spark.read.table("bronze.dbo.studentRegistration")
 
-# Flag FIRST, off the raw string column (empty/null = not withdrawn)
+# Flag first, off the raw string column (empty/null = not withdrawn)
 df_registration = df_registration.withColumn(
     "is_withdrawn",
     when((col("date_unregistration") == "") | (col("date_unregistration").isNull()), False).otherwise(True)
 )
 
-# THEN cast: day-offsets are integers, not timestamps; _ingested_at is a real timestamp
+# cast: day-offsets are integers, not timestamps; _ingested_at is a real timestamp
 df_registration = df_registration.withColumn("date_registration", col("date_registration").cast("integer"))
 df_registration = df_registration.withColumn("date_unregistration", col("date_unregistration").cast("integer"))
 df_registration = df_registration.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
@@ -93,6 +95,103 @@ df_registration = df_registration.withColumn("_ingested_at", col("_ingested_at")
 df_registration.printSchema()
 df_registration.groupBy("is_withdrawn").count().show()
 df_registration.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.studentRegistration")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# assesments table
+df_assessments = spark.read.table("bronze.dbo.assessments")
+
+# Cast: date to integers, weight to double and _ingested_at as timestamp 
+df_assessments = df_assessments.withColumn("date", col("date").cast("integer"))
+df_assessments = df_assessments.withColumn("weight", col("weight").cast("double"))
+df_assessments = df_assessments.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
+
+df_assessments.printSchema()
+df_assessments.show(5)
+
+# write to silver as delta table on 'overwrite mode'
+df_assessments.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.assessments")
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# courses table
+df_courses = spark.read.table("bronze.dbo.courses")
+
+df_courses = df_courses.withColumn("module_presentation_length", col("module_presentation_length").cast("integer"))
+df_courses = df_courses.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
+
+df_courses.printSchema()
+df_courses.show(5)
+
+# write to silver as delta table on 'overwrite mode'
+df_courses.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.courses")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+df_vle = spark.read.table("bronze.dbo.vle")
+
+df_vle = df_vle.withColumn("week_to", col("week_to").cast("integer"))
+df_vle = df_vle.withColumn("week_from", col("week_from").cast("integer"))
+df_vle = df_vle.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
+
+df_vle.printSchema()
+df_vle.show(5)
+
+# write to silver as delta table on 'overwrite mode'
+df_vle.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.vle")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+df_studentVle = spark.read.table("bronze.dbo.studentVle")
+
+df_studentVle = df_studentVle.withColumn("sum_click", col("sum_click").cast("integer"))
+df_studentVle = df_studentVle.withColumn("date", col("date").cast("integer"))
+df_studentVle = df_studentVle.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
+
+df_studentVle.printSchema()
+df_studentVle.show(5)
+
+df_student_vle_agg = df_studentVle.groupBy(
+    "id_student", "code_module", "code_presentation", "id_site", "date"
+).agg(
+    F.sum("sum_click").alias("total_clicks"),
+    F.count("*").alias("event_count")
+)
+
+df_student_vle_agg.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.studentVle")
+
+# Reconcile two ways:
+print(df_student_vle_agg.count())                              # new (smaller) row count
+print(df_student_vle_agg.agg(F.sum("event_count")).show())     # must equal 10,655,280
 
 # METADATA ********************
 
