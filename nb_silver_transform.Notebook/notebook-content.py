@@ -27,9 +27,8 @@
 
 # Import libraries
 from pyspark.sql import functions as F
+from pyspark.sql.functions import col, when 
 from pyspark.sql.window import Window
-
-
 
 # METADATA ********************
 
@@ -150,8 +149,10 @@ df_courses.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.cours
 
 # CELL ********************
 
+#vle table
 df_vle = spark.read.table("bronze.dbo.vle")
 
+# cast
 df_vle = df_vle.withColumn("week_to", col("week_to").cast("integer"))
 df_vle = df_vle.withColumn("week_from", col("week_from").cast("integer"))
 df_vle = df_vle.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
@@ -199,3 +200,45 @@ print(df_student_vle_agg.agg(F.sum("event_count")).show())     # must equal 10,6
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# CELL ********************
+
+# studentAssessment table — cast + quarantine framework
+
+df_studentAssessment = spark.read.table("bronze.dbo.studentAssessment")
+
+# Cast: score & date_submitted to int, is_banked string->int->boolean, _ingested_at to timestamp
+# (is_banked two-step cast: "0"/"1" string won't map directly to boolean, so int first)
+df_studentAssessment = df_studentAssessment.withColumn("score", col("score").cast("integer"))
+df_studentAssessment = df_studentAssessment.withColumn("date_submitted", col("date_submitted").cast("integer"))
+df_studentAssessment = df_studentAssessment.withColumn("is_banked", col("is_banked").cast("integer").cast("boolean"))
+df_studentAssessment = df_studentAssessment.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
+
+# QUARANTINE: split valid vs invalid score rows (validity rule: 0-100)
+# Nulls -> valid (a null score = assessment not taken/graded, missing not corrupt)
+# isNull() explicit in valid filter so nulls don't vanish from both filters
+valid_studentAssessment = df_studentAssessment.filter(
+    (col("score").isNull()) | ((col("score") >= 0) & (col("score") <= 100))
+)
+# Invalid = out-of-range only (corrupt data); 0 rows on this dataset (scores are clean)
+invalid_studentAssessment = df_studentAssessment.filter(
+    (col("score") < 0) | (col("score") > 100)
+)
+
+# Write valid -> silver, invalid -> quarantine table (kept even if empty: documents the check ran)
+valid_studentAssessment.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.studentAssessment")
+invalid_studentAssessment.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.studentAssessment_quarantine")
+
+# Reconcile: valid + invalid must equal source 173,912 (no rows vanish)
+print(valid_studentAssessment.count())     # 173,912
+print(invalid_studentAssessment.count())   # 0
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
