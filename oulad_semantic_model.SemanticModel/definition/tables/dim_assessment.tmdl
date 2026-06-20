@@ -1,0 +1,78 @@
+table dim_assessment
+	lineageTag: 0e2260c2-f71b-4c7a-969b-674e9c61bec5
+	sourceLineageTag: [dbo].[dim_assessment]
+
+	column assessment_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: 234e9f9c-e647-47c6-8587-89c856398619
+		sourceLineageTag: assessment_sk
+		summarizeBy: none
+		sourceColumn: assessment_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_module
+		dataType: string
+		lineageTag: d5a2df8c-02ee-4fbd-8ef3-6893fe638300
+		sourceLineageTag: code_module
+		summarizeBy: none
+		sourceColumn: code_module
+
+		annotation SummarizationSetBy = Automatic
+
+	column code_presentation
+		dataType: string
+		lineageTag: 0dca7890-65ac-4603-96f7-59ad135e3470
+		sourceLineageTag: code_presentation
+		summarizeBy: none
+		sourceColumn: code_presentation
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_assessment
+		dataType: string
+		lineageTag: 3db401a1-86e4-47b4-8070-c00d103fb584
+		sourceLineageTag: id_assessment
+		summarizeBy: none
+		sourceColumn: id_assessment
+
+		annotation SummarizationSetBy = Automatic
+
+	column assessment_type
+		dataType: string
+		lineageTag: b3010770-573e-41a8-a045-a70c9dd60920
+		sourceLineageTag: assessment_type
+		summarizeBy: none
+		sourceColumn: assessment_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: int64
+		formatString: 0
+		lineageTag: 82c9845a-1716-477d-9f1e-28538757300d
+		sourceLineageTag: date
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column weight
+		dataType: double
+		lineageTag: 9bbece32-7079-4750-a06a-3bbdba6dad0a
+		sourceLineageTag: weight
+		summarizeBy: none
+		sourceColumn: weight
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dim_assessment = entity
+		mode: directLake
+		source
+			entityName: dim_assessment
+			schemaName: dbo
+			expressionSource: 'DirectLake - gold'
+

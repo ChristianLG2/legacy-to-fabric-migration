@@ -1,0 +1,29 @@
+relationship e173f19c-629f-9682-8edb-78a02dd85818
+	relyOnReferentialIntegrity
+	fromColumn: fact_assessment.assessment_sk
+	toColumn: dim_assessment.assessment_sk
+
+relationship 94da1d2a-dc47-8b93-324e-99fc5a6acb69
+	relyOnReferentialIntegrity
+	fromColumn: fact_vle.module_sk
+	toColumn: dim_module.module_sk
+
+relationship 5b7f1990-a37d-e7e1-32f1-2d6284ff03b7
+	fromColumn: fact_vle.student_sk
+	toColumn: dim_student.student_sk
+
+relationship 5c226523-c0f6-1701-c1d4-124e4454a36b
+	relyOnReferentialIntegrity
+	fromColumn: fact_assessment.student_sk
+	toColumn: dim_student.student_sk
+
+relationship 2c5ecef8-6de2-f8a3-c1a6-d0714f8e6a0c
+	relyOnReferentialIntegrity
+	fromColumn: fact_registration.student_sk
+	toColumn: dim_student.student_sk
+
+relationship ba2aa294-eb7f-6ed5-536e-93d983f372dc
+	relyOnReferentialIntegrity
+	fromColumn: fact_registration.module_sk
+	toColumn: dim_module.module_sk
+

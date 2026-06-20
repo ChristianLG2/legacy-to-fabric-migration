@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "oulad_semantic_model"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d80a9dbb-fbbe-b5fe-460a-dfe85314b11e"
+  }
+}

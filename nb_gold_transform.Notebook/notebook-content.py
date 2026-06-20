@@ -229,7 +229,7 @@ print(spark.read.table("gold.dbo.fact_assessment").count())  # 173,912
 
 # MARKDOWN ********************
 
-# #### 2.`dim_module` table:
+# #### 2.`fact_module` table:
 
 # CELL ********************
 
@@ -239,8 +239,7 @@ df_student_vle = spark.read.table("silver.dbo.studentVle")
 
 fact_student_vle = df_student_vle \
     .join(dim_student.select("student_sk", "id_student"), on="id_student", how="left") \
-    .join(
-        dim_module.select("module_sk", "code_module", "code_presentation"),
+    .join(dim_module.select("module_sk", "code_module", "code_presentation"),
         on=["code_module", "code_presentation"],   # BOTH columns composite key
         how="left"
     )
@@ -256,6 +255,40 @@ fact_student_vle = fact_student_vle.select(
 )
 fact_student_vle.write.format("delta").mode("overwrite").saveAsTable("gold.dbo.fact_vle")
 print(spark.read.table("gold.dbo.fact_vle").count())  # 8,459,320
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# #### 3.`fact_registration` table:
+
+
+# CELL ********************
+
+dim_module = spark.read.table("gold.dbo.dim_module")
+dim_student = spark.read.table("gold.dbo.dim_student")
+df_student_registration = spark.read.table("silver.dbo.studentRegistration")
+
+fact_registration = df_student_registration \
+    .join(dim_student.select("student_sk", "id_student"), on="id_student", how="left") \
+    .join(dim_module.select("module_sk", "code_module", "code_presentation"),
+          on=["code_module", "code_presentation"], how="left")
+
+print(fact_registration.count())                                       # 32,593 (no fan-out)
+print(fact_registration.filter(col("student_sk").isNull()).count())    # expect 0
+print(fact_registration.filter(col("module_sk").isNull()).count())     # expect 0
+
+# skinny fact
+fact_registration = fact_registration.select(
+    "student_sk", "module_sk", "is_withdrawn", "date_registration", "date_unregistration"
+)
+fact_registration.write.format("delta").mode("overwrite").saveAsTable("gold.dbo.fact_registration")
+print(spark.read.table("gold.dbo.fact_registration").count())          # 32,593
 
 # METADATA ********************
 

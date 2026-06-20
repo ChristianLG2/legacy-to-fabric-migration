@@ -1,0 +1,57 @@
+table fact_vle
+	lineageTag: e28bd915-cc42-4051-9100-832acd9f4b7a
+	sourceLineageTag: [dbo].[fact_vle]
+
+	measure 'total clicks' = SUM(fact_vle[total_clicks])
+		formatString: 0
+		lineageTag: ae6e954b-d01d-49bc-8d76-ac90293de062
+
+		changedProperty = Name
+
+	column student_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: 83421961-f0e3-42cb-ad3d-9f71bca6b6cb
+		sourceLineageTag: student_sk
+		summarizeBy: none
+		sourceColumn: student_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column module_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: 3f65dfcb-957e-4778-a20e-88a6d13fac1c
+		sourceLineageTag: module_sk
+		summarizeBy: none
+		sourceColumn: module_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_clicks
+		dataType: int64
+		formatString: 0
+		lineageTag: 584fc616-52ad-410c-8076-48037929faa9
+		sourceLineageTag: total_clicks
+		summarizeBy: sum
+		sourceColumn: total_clicks
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 5eb7b7e7-4394-4880-a4c3-8f4a8705b7dd
+		sourceLineageTag: event_count
+		summarizeBy: sum
+		sourceColumn: event_count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_vle = entity
+		mode: directLake
+		source
+			entityName: fact_vle
+			schemaName: dbo
+			expressionSource: 'DirectLake - gold'
+

@@ -1,0 +1,61 @@
+table fact_registration
+	lineageTag: fcdc160a-7c58-43e1-91f5-87d595c56cf3
+	sourceLineageTag: [dbo].[fact_registration]
+
+	column student_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: 5d885129-fa14-40fe-bd11-97f525d01be7
+		sourceLineageTag: student_sk
+		summarizeBy: none
+		sourceColumn: student_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column module_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: c38ae21a-b09f-4a2d-85aa-8d183d164389
+		sourceLineageTag: module_sk
+		summarizeBy: none
+		sourceColumn: module_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_withdrawn
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 5b2c7331-ce1d-4ec8-b0ba-03e16c33bb89
+		sourceLineageTag: is_withdrawn
+		summarizeBy: none
+		sourceColumn: is_withdrawn
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_registration
+		dataType: int64
+		formatString: 0
+		lineageTag: 14f7ab85-e8c2-4ef9-a118-475ae719fa4b
+		sourceLineageTag: date_registration
+		summarizeBy: sum
+		sourceColumn: date_registration
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_unregistration
+		dataType: int64
+		formatString: 0
+		lineageTag: 8049030a-1219-4883-8880-c5a8fa0f1c9f
+		sourceLineageTag: date_unregistration
+		summarizeBy: sum
+		sourceColumn: date_unregistration
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_registration = entity
+		mode: directLake
+		source
+			entityName: fact_registration
+			schemaName: dbo
+			expressionSource: 'DirectLake - gold'
+

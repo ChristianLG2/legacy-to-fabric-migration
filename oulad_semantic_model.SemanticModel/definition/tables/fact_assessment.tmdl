@@ -1,0 +1,74 @@
+table fact_assessment
+	lineageTag: 4201d48c-6c42-461b-9061-4aa612342201
+	sourceLineageTag: [dbo].[fact_assessment]
+
+	measure 'Avg Score' = AVERAGE(fact_assessment[score])
+		lineageTag: a43eafe8-5e7c-41f2-a240-b8ae07fb986c
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'total assessments' = COUNTROWS(fact_assessment)
+		formatString: 0
+		lineageTag: 50db73d1-9684-496d-b31a-475cd07362f3
+
+		changedProperty = Name
+
+	column student_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: f7765923-4747-4740-8ec3-013f2ce229aa
+		sourceLineageTag: student_sk
+		summarizeBy: none
+		sourceColumn: student_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column assessment_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: 4830ff0f-cba3-4701-b707-de362d24380f
+		sourceLineageTag: assessment_sk
+		summarizeBy: none
+		sourceColumn: assessment_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column score
+		dataType: int64
+		formatString: 0
+		lineageTag: a99e2c8d-f5db-4969-a68e-a2fdca4427b1
+		sourceLineageTag: score
+		summarizeBy: sum
+		sourceColumn: score
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_banked
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 69fde706-8bb9-4851-b4b9-76b5d1830c50
+		sourceLineageTag: is_banked
+		summarizeBy: none
+		sourceColumn: is_banked
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_submitted
+		dataType: int64
+		formatString: 0
+		lineageTag: 60ffc5e2-d7c5-413a-a5ad-f46bb013d27e
+		sourceLineageTag: date_submitted
+		summarizeBy: sum
+		sourceColumn: date_submitted
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_assessment = entity
+		mode: directLake
+		source
+			entityName: fact_assessment
+			schemaName: dbo
+			expressionSource: 'DirectLake - gold'
+

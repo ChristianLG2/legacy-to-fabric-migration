@@ -1,0 +1,90 @@
+table dim_student
+	lineageTag: f4429abf-9bf6-4c32-9d7f-10b658f0b149
+	sourceLineageTag: [dbo].[dim_student]
+
+	measure 'total students' = DISTINCTCOUNT(dim_student[id_student])
+		formatString: 0
+		lineageTag: b02a28d6-6bd7-49b1-aeac-b41f9cb9a694
+
+		changedProperty = Name
+
+	column student_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: c12ebd14-1856-4b9a-ad05-99735877ec50
+		sourceLineageTag: student_sk
+		summarizeBy: none
+		sourceColumn: student_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column id_student
+		dataType: string
+		lineageTag: dc516e00-d75e-4df3-8e6d-55b6c9de06bc
+		sourceLineageTag: id_student
+		summarizeBy: none
+		sourceColumn: id_student
+
+		annotation SummarizationSetBy = Automatic
+
+	column gender
+		dataType: string
+		lineageTag: 8b52188d-a834-43f2-aaf3-31ca8aef2d79
+		sourceLineageTag: gender
+		summarizeBy: none
+		sourceColumn: gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: ca97d745-6795-4580-846f-5e67c92f2f61
+		sourceLineageTag: region
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column highest_education
+		dataType: string
+		lineageTag: 4e3d0ac1-d8c1-4465-917a-e23232a2d2f2
+		sourceLineageTag: highest_education
+		summarizeBy: none
+		sourceColumn: highest_education
+
+		annotation SummarizationSetBy = Automatic
+
+	column imd_band
+		dataType: string
+		lineageTag: 30914068-0f22-4d1c-957b-c3a5d3e06798
+		sourceLineageTag: imd_band
+		summarizeBy: none
+		sourceColumn: imd_band
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_band
+		dataType: string
+		lineageTag: 7b1e53dd-86a3-4cb9-a0d3-712ba9950ecf
+		sourceLineageTag: age_band
+		summarizeBy: none
+		sourceColumn: age_band
+
+		annotation SummarizationSetBy = Automatic
+
+	column disability
+		dataType: string
+		lineageTag: 3f396c32-65d9-4504-a114-8301cdcae840
+		sourceLineageTag: disability
+		summarizeBy: none
+		sourceColumn: disability
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_student = entity
+		mode: directLake
+		source
+			entityName: dim_student
+			schemaName: dbo
+			expressionSource: 'DirectLake - gold'
+
