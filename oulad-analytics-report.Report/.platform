@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "oulad-analytics-report"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "783770c8-73b1-b148-4124-fd995239462f"
+  }
+}
