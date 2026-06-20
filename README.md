@@ -11,7 +11,7 @@ Built on the **Open University Learning Analytics Dataset (OULAD)** — 28,785 s
 <!-- TODO: architecture diagram image will be here -->
 <!-- TODO: report screenshots and video walkthrough link will be here -->
 
----
+
 
 ## Why this project
 
@@ -24,7 +24,7 @@ The goal was fidelity, not just a demo: a real legacy warehouse stands in as the
 so the "SQL Server -> Fabric" path is literal and reconcilable, with a monolithic legacy
 T-SQL transform preserved as the documented "before" baseline.
 
----
+
 
 ## Architecture
 
@@ -46,7 +46,7 @@ The full pipeline is orchestrated as a scheduled Fabric Data Pipeline:
 - **Report** — four-page Power BI report (Overview, Registrations & Outcomes, Demographics
   & Engagement, Assessments & Performance).
 
----
+
 
 ## Data model (Gold)
 
@@ -62,7 +62,7 @@ The full pipeline is orchestrated as a scheduled Fabric Data Pipeline:
 
 `dim_student` is a conformed dimension feeding all three facts.
 
----
+
 
 ## Key engineering decisions
 
@@ -79,7 +79,7 @@ The full pipeline is orchestrated as a scheduled Fabric Data Pipeline:
 - **Performance tuning** — the 8.5M-row engagement fact is compacted with Delta OPTIMIZE and
   V-Order for Direct Lake read performance.
 
----
+
 
 ## Governance
 
@@ -88,7 +88,7 @@ The full pipeline is orchestrated as a scheduled Fabric Data Pipeline:
 - **Assume referential integrity** enabled on fact-to-dimension relationships, validated by
   zero-orphan key checks, for faster Direct Lake joins.
 
----
+
 
 ## Headline findings
 
@@ -98,14 +98,14 @@ The full pipeline is orchestrated as a scheduled Fabric Data Pipeline:
 - **Attrition is via withdrawal, not failure** — pass rates run 89-98%, so the risk is students
   leaving, not failing.
 
----
+
 
 ## Tech stack
 
 Microsoft Fabric · OneLake · Delta Lake · PySpark · Spark SQL · T-SQL · Kimball dimensional
 modeling · Direct Lake · Power BI · DAX · Entra ID (RLS/CLS) · Fabric Data Pipelines · Git integration
 
----
+
 
 ## Repository structure
 
@@ -118,7 +118,7 @@ legacy-to-fabric-migration/
 └── README.md
 ```
 
----
+
 
 ## Documentation
 
@@ -128,7 +128,7 @@ legacy-to-fabric-migration/
 - `docs/diagnostics.sql` — source data inspection with findings and decisions.
 - `docs/interview-notes.md` — engineering decisions and rationale captured during the build.
 
----
+
 
 ## Dataset
 
