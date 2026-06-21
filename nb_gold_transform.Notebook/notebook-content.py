@@ -296,3 +296,38 @@ print(spark.read.table("gold.dbo.fact_registration").count())          # 32,593
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# MARKDOWN ********************
+
+# ## Security Mapping Tables:
+# 
+
+
+# CELL ********************
+
+from pyspark.sql import Row
+
+# Security mapping: which admin (by email) can see which region(s).
+# An admin overseeing multiple regions gets multiple rows.
+security_data = [
+    Row(user_email="scotland.admin@byui.edu", region="Scotland"),
+    Row(user_email="north.admin@byui.edu",    region="Scotland"),
+    Row(user_email="north.admin@byui.edu",    region="North Region"),
+    Row(user_email="north.admin@byui.edu",    region="North Western Region"),
+    Row(user_email="exec.admin@byui.edu",     region="Scotland"),
+    Row(user_email="exec.admin@byui.edu",     region="Wales"),
+    Row(user_email="ChristianLG@orpheusanalyticsgroup.com",     region="Ireland"),
+    Row(user_email="ChristianLG@orpheusanalyticsgroup.com",  region="Scotland"),
+    Row(user_email="ChristianLG@orpheusanalyticsgroup.com",  region="London Region"),
+]
+
+df_security = spark.createDataFrame(security_data)
+df_security.write.format("delta").mode("overwrite").saveAsTable("gold.dbo.security_region_map")
+df_security.show()
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }

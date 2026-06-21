@@ -18,4 +18,7 @@ ref table dim_module
 ref table dim_assessment
 ref table dim_student
 ref table fact_registration
+ref table security_region_map
+
+ref role 'Regional Admin'
 

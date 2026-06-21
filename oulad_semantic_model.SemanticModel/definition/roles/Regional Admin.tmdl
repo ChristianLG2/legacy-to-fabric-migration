@@ -1,0 +1,14 @@
+role 'Regional Admin'
+	modelPermission: read
+
+	tablePermission dim_student =
+			[region] IN
+			CALCULATETABLE(
+			    VALUES(security_region_map[region]),
+			    security_region_map[user_email] = USERPRINCIPALNAME()
+			)
+
+	tablePermission dim_assessment
+
+	annotation PBI_Id = fce05f6a48024dce932b853889c2940d
+

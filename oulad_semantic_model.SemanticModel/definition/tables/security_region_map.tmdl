@@ -1,0 +1,29 @@
+table security_region_map
+	lineageTag: fb2fa584-7831-4b1f-a7de-27746b219beb
+	sourceLineageTag: [dbo].[security_region_map]
+
+	column user_email
+		dataType: string
+		lineageTag: de43cad4-7fe3-4529-b43f-88187d738184
+		sourceLineageTag: user_email
+		summarizeBy: none
+		sourceColumn: user_email
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 828b30ed-817e-4ff9-9f03-5cc490cb9684
+		sourceLineageTag: region
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	partition security_region_map = entity
+		mode: directLake
+		source
+			entityName: security_region_map
+			schemaName: dbo
+			expressionSource: 'DirectLake - gold'
+
