@@ -8,8 +8,8 @@
 # META   },
 # META   "dependencies": {
 # META     "lakehouse": {
-# META       "default_lakehouse": "1926c013-7667-418f-93e9-4b00b5c1c917",
-# META       "default_lakehouse_name": "silver",
+# META       "default_lakehouse": "95e8d8bb-b489-43ff-b5a7-37323ff27ac5",
+# META       "default_lakehouse_name": "gold",
 # META       "default_lakehouse_workspace_id": "e481a74a-9f2c-4567-9c87-43590f602fc7",
 # META       "known_lakehouses": [
 # META         {
@@ -324,6 +324,40 @@ security_data = [
 df_security = spark.createDataFrame(security_data)
 df_security.write.format("delta").mode("overwrite").saveAsTable("gold.dbo.security_region_map")
 df_security.show()
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
+# ## Optimize + V-Order
+
+# CELL ********************
+
+from delta.tables import DeltaTable
+import os
+
+df = spark.read.table("gold.dbo.fact_vle")
+print("Row Count:", df.count())
+
+spark.sql("DESCRIBE DETAIL gold.dbo.fact_vle").select("numFiles", "sizeInBytes").show()
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+spark.sql("OPTIMIZE gold.dbo.fact_vle")
+spark.sql("DESCRIBE DETAIL gold.dbo.fact_vle").select("numFiles", "sizeInBytes").show()
 
 # METADATA ********************
 

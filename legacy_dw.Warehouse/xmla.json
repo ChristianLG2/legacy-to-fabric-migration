@@ -187,6 +187,177 @@
         ]
       },
       {
+        "name": "legacy_student_summary",
+        "sourceLineageTag": "[dbo].[legacy_student_summary]",
+        "columns": [
+          {
+            "name": "id_student",
+            "dataType": "string",
+            "sourceColumn": "id_student",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "id_student",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "gender",
+            "dataType": "string",
+            "sourceColumn": "gender",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "gender",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "region",
+            "dataType": "string",
+            "sourceColumn": "region",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "region",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "highest_education",
+            "dataType": "string",
+            "sourceColumn": "highest_education",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "highest_education",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "age_band",
+            "dataType": "string",
+            "sourceColumn": "age_band",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "age_band",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "imd_band",
+            "dataType": "string",
+            "sourceColumn": "imd_band",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "imd_band",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "date_registration",
+            "dataType": "int64",
+            "sourceColumn": "date_registration",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "date_registration",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "is_withdrawn",
+            "dataType": "int64",
+            "sourceColumn": "is_withdrawn",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "is_withdrawn",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "avg_score",
+            "dataType": "double",
+            "sourceColumn": "avg_score",
+            "sourceProviderType": "float",
+            "sourceLineageTag": "avg_score",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "total_clicks",
+            "dataType": "int64",
+            "sourceColumn": "total_clicks",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "total_clicks",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "legacy_student_summary",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "dbo"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
         "name": "studentAssessment",
         "sourceLineageTag": "[dbo].[studentAssessment]",
         "columns": [
