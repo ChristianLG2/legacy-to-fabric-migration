@@ -11,6 +11,8 @@ Built on the **Open University Learning Analytics Dataset (OULAD)** — 28,785 s
 <!-- TODO: architecture diagram image will be here -->
 <!-- TODO: report screenshots and video walkthrough link will be here -->
 
+[Project Diagram](assets/medallion-lakehouse.png)
+
 ```mermaid
 flowchart LR
     subgraph Legacy["Legacy (the 'before')"]
