@@ -81,5 +81,5 @@ FROM studentRegistration
 GROUP BY CASE WHEN date_unregistration IS NULL OR date_unregistration = '' 
               THEN 'registered' ELSE 'unregistered' END;
 -- Finding: ~30% of registrations are withdrawals. [note empty-form: NULL only / mixed]
--- Decision: Keep withdrawn rows, add is_withdrawn flag. Dropping ~30% would gut the
+-- Decision: Keep withdrawn rows, add is_withdrawn flag. Dropping ~31% would gut the
 --           dataset and erase the most analytically interesting cohort (retention analysis).
