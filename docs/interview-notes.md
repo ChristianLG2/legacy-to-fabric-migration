@@ -105,5 +105,5 @@
   `sum(event_count)`).
 - 28,785 students · 32,593 registrations · 173,912 assessments · 206 assessments · 22 modules.
 - ~31% withdrawal rate; education gradient 43% (no quals) → 23% (postgrad).
-- 0 orphan keys across all fact→dim joins. OPTIMIZE: 9 files → 1.
+- 0 orphan keys across all fact→dim joins. OPTIMIZE compacts fact_vle from several small files to one.
 - Pass rates 89–98% → attrition is withdrawal, not failure.
