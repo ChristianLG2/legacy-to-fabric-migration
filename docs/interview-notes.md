@@ -1,10 +1,3 @@
-<!-- ============================================================ -->
-<!-- ADDITIONS append these sections to interview-notes.md.     -->
-<!-- They cover the second half of the build (Gold → submit) that -->
-<!-- the "still to come" footer flagged. Delete that footer once   -->
-<!-- these are merged in.                                          -->
-<!-- ============================================================ -->
-
 ## Quarantine & validation framework
 
 - **Quarantine over drop (the maturity signal):** invalid `studentAssessment`

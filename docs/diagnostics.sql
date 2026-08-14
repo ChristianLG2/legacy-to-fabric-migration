@@ -63,6 +63,7 @@ SELECT imd_band, COUNT(*) as imd_count, ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) O
 FROM studentInfo
 GROUP BY imd_band
 ORDER BY imd_count DESC;
+
 -- Finding: Nulls are true Null values, not empty strings.
 --  10-20 does not contain % sign, formatting incosistency.
 --  Nulls represent 3.4n percent of the data
@@ -73,6 +74,8 @@ ORDER BY imd_count DESC;
 
 -- Check: What share of registrations are withdrawals?
 --        (date_unregistration populated = withdrew; drives keep-vs-drop decision)
+
+
 SELECT CASE WHEN date_unregistration IS NULL OR date_unregistration = '' 
             THEN 'registered' ELSE 'unregistered' END AS registration_status,
        COUNT(*) AS status_count,
@@ -80,6 +83,6 @@ SELECT CASE WHEN date_unregistration IS NULL OR date_unregistration = ''
 FROM studentRegistration
 GROUP BY CASE WHEN date_unregistration IS NULL OR date_unregistration = '' 
               THEN 'registered' ELSE 'unregistered' END;
--- Finding: ~30% of registrations are withdrawals. [note empty-form: NULL only / mixed]
--- Decision: Keep withdrawn rows, add is_withdrawn flag. Dropping ~31% would gut the
---           dataset and erase the most analytically interesting cohort (retention analysis).
+
+-- Finding: ~31% of registrations are withdrawals. [note empty-form: NULL only / mixed]
+-- Decision: Keep withdrawn rows, add is_withdrawn flag. Dropping ~31% would gut the dataset and erase the most analytically interesting cohort (retention analysis).
