@@ -29,6 +29,23 @@
 # META   }
 # META }
 
+# MARKDOWN ********************
+
+# ## Bronze Layer: Ingestion Reconciliation
+# 
+# Bronze ingestion itself (`pl_bronze_ingest`) is a Fabric Data Pipeline  7 Copy
+# activities, one per source table, `legacy_dw` > `bronze.Lakehouse`, each stamping
+# an `_ingested_at` audit column via `@utcnow()`. Overwrite mode, so reruns replace
+# cleanly rather than duplicating (the idempotency decision documented in
+# `docs/interview-notes.md`).
+# 
+# This notebook is the verification step, not the ingestion itself: it reads both
+# sides  source (`legacy_dw`) and destination (`bronze`)  for all 7 tables, and
+# **asserts** row-count equality rather than just printing counts for someone to
+# eyeball. A silent count mismatch here would mean the pipeline's Copy activities
+# lost or duplicated rows somewhere, which is exactly the kind of failure that
+# should stop the run loudly, not slip downstream into Silver unnoticed.
+
 # CELL ********************
 
 from pyspark.sql import SparkSession

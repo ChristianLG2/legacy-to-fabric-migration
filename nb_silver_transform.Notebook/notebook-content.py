@@ -23,6 +23,18 @@
 # META   }
 # META }
 
+# MARKDOWN ********************
+
+# ## Silver Layer: Clean, Cast, Conform
+# 
+# Reads raw Bronze Delta tables and produces typed, cleaned, conformed Silver tables.
+# Bronze preserves the source as-is (strings, nulls, duplicates and all); Silver is
+# where every data-quality decision from `docs/diagnostics.sql` actually gets applied.
+# 
+# Three things happen in every table below, in order: **cast** (string > real type),
+# **clean** (nulls, formatting, flags), **write** (overwrite mode full-reload
+# idempotent, per the ingestion decisions in `docs/interview-notes.md`).
+
 # CELL ********************
 
 # Import libraries
@@ -36,6 +48,15 @@ from pyspark.sql.window import Window
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# MARKDOWN ********************
+
+# ### studentInfo
+# 
+# Casts `studied_credits` and `num_of_prev_attempts` to integer. Cleans `imd_band`:
+# nulls/empty > `"Unknown"` (3.4% of rows low enough to impute, not drop), and
+# standardizes the `"10-20"` > `"10-20%"` formatting gap found during diagnostics,
+# so it doesn't silently split one category into two in any GROUP BY.
 
 # CELL ********************
 
@@ -75,6 +96,16 @@ df_student.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.stude
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# MARKDOWN ********************
+
+# ### studentRegistration
+# 
+# Derives `is_withdrawn` from `date_unregistration` *before* casting it flagging
+# off the raw string, not the cast value, so the flag logic doesn't depend on the
+# cast succeeding first. ~31% of rows are withdrawals; kept and flagged, never
+# dropped  this is the dataset's largest analytically-interesting cohort
+# (retention analysis), and dropping it would erase that signal entirely.
+
 # CELL ********************
 
 # studentRegistration table
@@ -102,6 +133,14 @@ df_registration.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# MARKDOWN ********************
+
+# ### assessments
+# 
+# Casts `date` (day-offset, not a real date) and `weight` to their proper types.
+# `weight` specifically needed a distinct-values check first some values like
+# `7.5` meant `integer` would silently truncate, so this is `double`.
+
 # CELL ********************
 
 # assesments table
@@ -126,6 +165,15 @@ df_assessments.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.a
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# MARKDOWN ********************
+
+# ### courses
+# 
+# Smallest, cleanest table (22 rows) just a type cast on
+# `module_presentation_length`. No data-quality issues surfaced here during
+# diagnostics, which is itself worth knowing: not every table needs the same
+# level of cleaning effort.
+
 # CELL ********************
 
 # courses table
@@ -146,6 +194,14 @@ df_courses.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.cours
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# MARKDOWN ********************
+
+# ### vle
+# 
+# Site/material reference table (6,364 rows). Casts `week_from`/`week_to` to
+# integer. Feeds `studentVle` downstream via `id_site` kept separate rather
+# than pre-joined, since Gold is where dimensional joins belong, not Silver.
 
 # CELL ********************
 
@@ -170,6 +226,17 @@ df_vle.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.vle")
 # META   "language_group": "synapse_pyspark"
 # META }
 
+# MARKDOWN ********************
+
+# ### studentVle / clickstream aggregation, not dedup
+# 
+# This is the one table where `row_number()` dedup (used elsewhere) doesn't apply:
+# clicks are additive, so deduping would silently lose real activity. Instead,
+# `groupBy(id_student, code_module, code_presentation, id_site, date).agg(sum, count)`
+# collapses repeat rows into one per student-material-day while preserving total
+# clicks. `event_count` is the reconciliation column  `sum(event_count)` must equal
+# the source row count (10,655,280) to prove the aggregation lost nothing.
+
 # CELL ********************
 
 df_studentVle = spark.read.table("bronze.dbo.studentVle")
@@ -177,6 +244,7 @@ df_studentVle = spark.read.table("bronze.dbo.studentVle")
 df_studentVle = df_studentVle.withColumn("sum_click", col("sum_click").cast("integer"))
 df_studentVle = df_studentVle.withColumn("date", col("date").cast("integer"))
 df_studentVle = df_studentVle.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
+source_row_count = df_studentVle.count()
 
 df_studentVle.printSchema()
 df_studentVle.show(5)
@@ -190,9 +258,12 @@ df_student_vle_agg = df_studentVle.groupBy(
 
 df_student_vle_agg.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.studentVle")
 
-# Reconcile two ways:
-print(df_student_vle_agg.count())                              # new (smaller) row count
-print(df_student_vle_agg.agg(F.sum("event_count")).show())     # must equal 10,655,280
+# Reconcile:
+agg_event_total = df_student_vle_agg.agg(F.sum("event_count")).collect()[0][0]
+assert agg_event_total == source_row_count, \
+    f"studentVle aggregation lost rows: source={source_row_count}, event_count sum={agg_event_total}"
+print(f"studentVle reconciliation: PASSED — {df_student_vle_agg.count()} aggregated rows, "
+      f"{agg_event_total} events (matches source: {source_row_count}).")
 
 # METADATA ********************
 
@@ -200,6 +271,17 @@ print(df_student_vle_agg.agg(F.sum("event_count")).show())     # must equal 10,6
 # META   "language": "python",
 # META   "language_group": "synapse_pyspark"
 # META }
+
+# MARKDOWN ********************
+
+# ### studentAssessment quarantine framework
+# 
+# Splits into two outputs instead of one: valid rows (score 0–100, or null,
+# a null score means "not yet graded," not corrupt) go to Silver; anything
+# outside that range goes to a quarantine table instead of being silently
+# dropped. The quarantine table is written even when empty (it is, on this
+# dataset) that documents the check ran, not just that the data happened
+# to be clean.
 
 # CELL ********************
 
@@ -213,6 +295,7 @@ df_studentAssessment = df_studentAssessment.withColumn("score", col("score").cas
 df_studentAssessment = df_studentAssessment.withColumn("date_submitted", col("date_submitted").cast("integer"))
 df_studentAssessment = df_studentAssessment.withColumn("is_banked", col("is_banked").cast("integer").cast("boolean"))
 df_studentAssessment = df_studentAssessment.withColumn("_ingested_at", col("_ingested_at").cast("timestamp"))
+source_assessment_count = df_studentAssessment.count()
 
 # QUARANTINE: split valid vs invalid score rows (validity rule: 0-100)
 # Nulls -> valid (a null score = assessment not taken/graded, missing not corrupt)
@@ -230,8 +313,12 @@ valid_studentAssessment.write.format("delta").mode("overwrite").saveAsTable("sil
 invalid_studentAssessment.write.format("delta").mode("overwrite").saveAsTable("silver.dbo.studentAssessment_quarantine")
 
 # Reconcile: valid + invalid must equal source 173,912 (no rows vanish)
-print(valid_studentAssessment.count())     # 173,912
-print(invalid_studentAssessment.count())   # 0
+valid_count = valid_studentAssessment.count()
+invalid_count = invalid_studentAssessment.count()
+assert valid_count + invalid_count == source_assessment_count, \
+    f"studentAssessment quarantine split lost rows: source={source_assessment_count}, valid+invalid={valid_count + invalid_count}"
+print(f"studentAssessment reconciliation: PASSED — {valid_count} valid, {invalid_count} quarantined "
+      f"(matches source: {source_assessment_count}).")
 
 # METADATA ********************
 
