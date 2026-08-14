@@ -16,14 +16,20 @@
 # META           "id": "877ea43f-8970-4584-b7e9-6fb0a71f28f4"
 # META         }
 # META       ]
+# META     },
+# META     "warehouse": {
+# META       "default_warehouse": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+# META       "known_warehouses": [
+# META         {
+# META           "id": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+# META           "type": "Datawarehouse"
+# META         }
+# META       ]
 # META     }
 # META   }
 # META }
 
 # CELL ********************
-
-# Welcome to your new notebook
-# Type here in the cell editor to add code!
 
 from pyspark.sql import SparkSession
 
@@ -34,9 +40,18 @@ spark = SparkSession.builder \
 tables = ["assessments", "courses", "studentAssessment", "studentInfo",
           "studentRegistration", "studentVle", "vle"]
 
+
+print(f"{'table':<22}{'legacy_dw':>12}{'bronze':>12}{'match':>8}")
+all_match = True
 for t in tables:
-    count = spark.read.table(t).count()
-    print(f"{t}: {count}")
+    source_count = spark.read.table(f"legacy_dw.dbo.{t}").count()
+    bronze_count = spark.read.table(f"bronze.dbo.{t}").count()
+    match = source_count == bronze_count
+    all_match = all_match and match
+    print(f"{t:<22}{source_count:>12}{bronze_count:>12}{str(match):>8}")
+
+assert all_match, "Bronze reconciliation failed — row counts do not match legacy_dw"
+print("\nBronze reconciliation: PASSED — all 7 tables match source counts.")
 
 
 

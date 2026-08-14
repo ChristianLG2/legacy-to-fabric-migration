@@ -15,7 +15,14 @@
           "secureOutput": false
         },
         "name": "Run Silver",
-        "dependsOn": []
+        "dependsOn": [
+          {
+            "activity": "Invoke pl_bronze_ingest",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       },
       {
         "type": "TridentNotebook",
@@ -69,6 +76,28 @@
             ]
           }
         ]
+      },
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {},
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "a6deb421-fd7e-985b-4640-2bf8c559d72b",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "5f79765c-49d3-40ae-8bf9-48f6f236d19f"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Invoke pl_bronze_ingest",
+        "dependsOn": []
       }
     ]
   }

@@ -1,5 +1,1201 @@
 {
   "properties": {
-    "activities": []
+    "activities": [
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "additionalColumns": [
+              {
+                "name": "_ingested_at",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "assessments"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "legacy_dw",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+                    "endpoint": "z5arkpomu4gexlzugghyv2joki-jktydzbmt5tulhehinmq6ybpy4.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "applyVOrder": false,
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "assessments"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "bronze",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a71f28f4-6fb0-b7e9-4584-8970877ea43f",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "code_module",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_module",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "code_presentation",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_presentation",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "id_assessment",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "id_assessment",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "assessment_type",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "assessment_type",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "date",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "date",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "weight",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "weight",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "_ingested_at",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "_ingested_at",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy_assesments",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "additionalColumns": [
+              {
+                "name": "_ingested_at",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "courses"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "legacy_dw",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+                    "endpoint": "z5arkpomu4gexlzugghyv2joki-jktydzbmt5tulhehinmq6ybpy4.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "applyVOrder": false,
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "courses"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "bronze",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a71f28f4-6fb0-b7e9-4584-8970877ea43f",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "code_module",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_module",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "code_presentation",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_presentation",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "module_presentation_length",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "module_presentation_length",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "_ingested_at",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "_ingested_at",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy_courses",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "additionalColumns": [
+              {
+                "name": "_ingested_at",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "studentAssessment"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "legacy_dw",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+                    "endpoint": "z5arkpomu4gexlzugghyv2joki-jktydzbmt5tulhehinmq6ybpy4.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "applyVOrder": false,
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "studentAssessment"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "bronze",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a71f28f4-6fb0-b7e9-4584-8970877ea43f",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "id_assessment",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "id_assessment",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "id_student",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "id_student",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "date_submitted",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "date_submitted",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "is_banked",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "is_banked",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "score",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "score",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "_ingested_at",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "_ingested_at",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy_student_assessment",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "additionalColumns": [
+              {
+                "name": "_ingested_at",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "studentInfo"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "legacy_dw",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+                    "endpoint": "z5arkpomu4gexlzugghyv2joki-jktydzbmt5tulhehinmq6ybpy4.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "applyVOrder": false,
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "studentInfo"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "bronze",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a71f28f4-6fb0-b7e9-4584-8970877ea43f",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "code_module",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_module",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "code_presentation",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_presentation",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "id_student",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "id_student",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "gender",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "gender",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "region",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "region",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "highest_education",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "highest_education",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "imd_band",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "imd_band",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "age_band",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "age_band",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "num_of_prev_attempts",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "num_of_prev_attempts",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "studied_credits",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "studied_credits",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "disability",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "disability",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "final_result",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "final_result",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "_ingested_at",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "_ingested_at",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy_student_info",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "additionalColumns": [
+              {
+                "name": "_ingested_at",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "studentRegistration"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "legacy_dw",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+                    "endpoint": "z5arkpomu4gexlzugghyv2joki-jktydzbmt5tulhehinmq6ybpy4.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "applyVOrder": false,
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "studentRegistration"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "bronze",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a71f28f4-6fb0-b7e9-4584-8970877ea43f",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "code_module",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_module",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "code_presentation",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_presentation",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "id_student",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "id_student",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "date_registration",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "date_registration",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "date_unregistration",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "date_unregistration",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "_ingested_at",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "_ingested_at",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy_student_registration",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "additionalColumns": [
+              {
+                "name": "_ingested_at",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "studentVle"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "legacy_dw",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+                    "endpoint": "z5arkpomu4gexlzugghyv2joki-jktydzbmt5tulhehinmq6ybpy4.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "applyVOrder": false,
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "studentVle"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "bronze",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a71f28f4-6fb0-b7e9-4584-8970877ea43f",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "code_module",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_module",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "code_presentation",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_presentation",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "id_student",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "id_student",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "id_site",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "id_site",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "date",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "date",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "sum_click",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "sum_click",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "_ingested_at",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "_ingested_at",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy_student_vle",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00",
+            "additionalColumns": [
+              {
+                "name": "_ingested_at",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              }
+            ],
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "vle"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "legacy_dw",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
+                    "endpoint": "z5arkpomu4gexlzugghyv2joki-jktydzbmt5tulhehinmq6ybpy4.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "OverwriteSchema",
+            "applyVOrder": false,
+            "partitionOption": "None",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "dbo",
+                "table": "vle"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "bronze",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "a71f28f4-6fb0-b7e9-4584-8970877ea43f",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "mappings": [
+              {
+                "source": {
+                  "name": "id_site",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "id_site",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "code_module",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_module",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "code_presentation",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "code_presentation",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "activity_type",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "activity_type",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "week_from",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "week_from",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "week_to",
+                  "type": "String",
+                  "physicalType": "varchar",
+                  "length": "8000"
+                },
+                "sink": {
+                  "name": "week_to",
+                  "physicalType": "string"
+                }
+              },
+              {
+                "source": {
+                  "name": "_ingested_at",
+                  "type": "String"
+                },
+                "sink": {
+                  "name": "_ingested_at",
+                  "physicalType": "string"
+                }
+              }
+            ],
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy_vle",
+        "dependsOn": []
+      }
+    ]
   }
 }
