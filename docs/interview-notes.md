@@ -77,10 +77,8 @@
 
 ## Performance OPTIMIZE / V-Order
 
-- **Small-files problem, demonstrated:** `OPTIMIZE` compacted `fact_vle` from **9
-  files → 1** (8.46M rows). Fewer files = fewer open/close ops = faster Direct Lake
-  reads. V-Order (on by default in Fabric) is preserved through compaction for
-  read performance.
+- **Small-files problem, demonstrated:** `OPTIMIZE` compacted `fact_vle` from several small files to one. ** (8.46M rows). Fewer files = fewer open/close ops = faster Direct Lake
+  reads. V-Order (on by default in Fabric) is preserved through compaction for read performance.
 - **Honest scope:** correct demonstration of the technique on a small (~20MB) table;
   the dramatic wins are at production scale (billions of rows, thousands of files).
   Claim the *pattern*, size the *impact* honestly.
