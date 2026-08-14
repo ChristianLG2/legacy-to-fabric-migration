@@ -126,8 +126,11 @@ df_dim_student = df_dim_student.select(
 )
 
 # Verify + write
-print(df_dim_student.count())                                  # expect 28,785 now
-print(df_dim_student.select("id_student").distinct().count())  # must also be 28,785 (unique!)
+total_rows = df_dim_student.count()
+distinct_students = df_dim_student.select("id_student").distinct().count()
+assert total_rows == distinct_students, \
+    f"dim_student has duplicate students: {total_rows} rows, {distinct_students} distinct"
+print(f"dim_student: PASSED — {total_rows} rows, one per student, no fan-out risk.")
 df_dim_student.write.format("delta").mode("overwrite").saveAsTable("gold.dbo.dim_student")
 print(spark.read.table("gold.dbo.dim_student").count())
 
@@ -141,7 +144,8 @@ print(spark.read.table("gold.dbo.dim_student").count())
 # MARKDOWN ********************
 
 # #### 2. `dim_courses` table:
-
+# Small (22 rows), no data-quality issues surfaced during diagnostics a
+# straight distinct + surrogate key, no cleaning needed.
 
 # CELL ********************
 
@@ -168,6 +172,8 @@ print(spark.read.table("gold.dbo.dim_module").count())  # expect 22
 # MARKDOWN ********************
 
 # #### 3.`dim_assessments` table: 
+# 206 assessment definitions, one row per assessment. Surrogate key only
+# no attribute variation to worry about here, unlike dim_student.
 
 # CELL ********************
 
@@ -194,8 +200,17 @@ print(spark.read.table("gold.dbo.dim_assessment").count())
 # MARKDOWN ********************
 
 # ## Fact tables
-# #### 1.`fact_assessment` table
-# :
+# Grain decided first for each fact, before building it  the single most
+# important modeling choice per table. Every fact below is skinny: surrogate
+# keys + measures only, descriptive attributes live in the dimensions.
+# 
+# <br/>
+# <br/>
+# 
+# #### 1. `fact_assessment`
+# One row per student per assessment. Left joins to both dims (not inner) so
+# a join failure surfaces as a null surrogate key instead of silently dropping
+# the row the null-key checks below are what catch that.
 
 # CELL ********************
 
@@ -229,7 +244,11 @@ print(spark.read.table("gold.dbo.fact_assessment").count())  # 173,912
 
 # MARKDOWN ********************
 
-# #### 2.`fact_module` table:
+# #### 2. `fact_vle`
+# One row per student-per-module-per-day (already aggregated in Silver).
+# Composite-key join on (code_module, code_presentation), a partial key here
+# would silently fan out the join, so the null-key checks and the row-count-
+# matches-8,459,320 check both exist specifically to catch that failure mode.
 
 # CELL ********************
 
@@ -244,10 +263,15 @@ fact_student_vle = df_student_vle \
         how="left"
     )
 
-# null-key checks (left-join responsibility)
-print(fact_student_vle.filter(col("student_sk").isNull()).count())  # expect 0
-print(fact_student_vle.filter(col("module_sk").isNull()).count())   # expect 0
-print(fact_student_vle.count())  # expect 8,459,320 — confirm NO fan-out
+# null-key checks (left-join responsibility) + fan-out check — before the write
+null_student_keys = fact_student_vle.filter(col("student_sk").isNull()).count()
+null_module_keys = fact_student_vle.filter(col("module_sk").isNull()).count()
+row_count = fact_student_vle.count()
+
+assert null_student_keys == 0 and null_module_keys == 0, \
+    f"fact_vle join produced null keys: student={null_student_keys}, module={null_module_keys}"
+assert row_count == 8459320, f"fact_vle row count changed: {row_count} (expected 8,459,320 — check for fan-out)"
+print(f"fact_vle: PASSED — {row_count} rows, no null keys, no fan-out.")
 
 # skinny fact: keys + measurements
 fact_student_vle = fact_student_vle.select(
@@ -265,7 +289,9 @@ print(spark.read.table("gold.dbo.fact_vle").count())  # 8,459,320
 
 # MARKDOWN ********************
 
-# #### 3.`fact_registration` table:
+# #### 3. `fact_registration`
+# One row per registration (32,593), enrollment outcome including withdrawal,
+# joined the same composite-key way as fact_vle.
 
 
 # CELL ********************
@@ -279,9 +305,15 @@ fact_registration = df_student_registration \
     .join(dim_module.select("module_sk", "code_module", "code_presentation"),
           on=["code_module", "code_presentation"], how="left")
 
-print(fact_registration.count())                                       # 32,593 (no fan-out)
-print(fact_registration.filter(col("student_sk").isNull()).count())    # expect 0
-print(fact_registration.filter(col("module_sk").isNull()).count())     # expect 0
+# null-key checks + fan-out check — before the write
+row_count = fact_registration.count()
+null_student_keys = fact_registration.filter(col("student_sk").isNull()).count()
+null_module_keys = fact_registration.filter(col("module_sk").isNull()).count()
+
+assert null_student_keys == 0 and null_module_keys == 0, \
+    f"fact_registration join produced null keys: student={null_student_keys}, module={null_module_keys}"
+assert row_count == 32593, f"fact_registration row count changed: {row_count} (expected 32,593)"
+print(f"fact_registration: PASSED — {row_count} rows, no null keys.")
 
 # skinny fact
 fact_registration = fact_registration.select(
@@ -299,9 +331,11 @@ print(spark.read.table("gold.dbo.fact_registration").count())          # 32,593
 
 # MARKDOWN ********************
 
-# ## Security Mapping Tables:
-# 
-
+# ## Security mapping table
+# Backing table for dynamic RLS maps user_email to the region(s) they can
+# see, queried by DAX lookup at query time rather than a modeled relationship
+# (avoids a many-to-many that would mis-filter the star). Adding a user is an
+# INSERT, not a role edit the production pattern.
 
 # CELL ********************
 
@@ -334,7 +368,10 @@ df_security.show()
 
 # MARKDOWN ********************
 
-# ## Optimize + V-Order
+# ## Performance  OPTIMIZE + V-Order
+# `fact_vle` is the only table worth tuning everything else is small enough
+# that compaction wouldn't matter. Captures file count before and after
+# OPTIMIZE as the concrete before/after number.
 
 # CELL ********************
 
@@ -342,10 +379,11 @@ from delta.tables import DeltaTable
 import os
 
 df = spark.read.table("gold.dbo.fact_vle")
-print("Row Count:", df.count())
+row_count = df.count()
+print("Row Count:", row_count)
 
-spark.sql("DESCRIBE DETAIL gold.dbo.fact_vle").select("numFiles", "sizeInBytes").show()
-
+before = spark.sql("DESCRIBE DETAIL gold.dbo.fact_vle").select("numFiles", "sizeInBytes").collect()[0]
+print(f"Before OPTIMIZE: {before['numFiles']} files, {before['sizeInBytes']:,} bytes")
 
 # METADATA ********************
 
@@ -357,7 +395,11 @@ spark.sql("DESCRIBE DETAIL gold.dbo.fact_vle").select("numFiles", "sizeInBytes")
 # CELL ********************
 
 spark.sql("OPTIMIZE gold.dbo.fact_vle")
-spark.sql("DESCRIBE DETAIL gold.dbo.fact_vle").select("numFiles", "sizeInBytes").show()
+after = spark.sql("DESCRIBE DETAIL gold.dbo.fact_vle").select("numFiles", "sizeInBytes").collect()[0]
+
+print(f"After OPTIMIZE: {after['numFiles']} files, {after['sizeInBytes']:,} bytes")
+print(f"\nOPTIMIZE fact_vle: {before['numFiles']} files → {after['numFiles']} files "
+      f"({before['sizeInBytes']:,} → {after['sizeInBytes']:,} bytes)")
 
 # METADATA ********************
 
