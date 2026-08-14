@@ -11,6 +11,42 @@ Built on the **Open University Learning Analytics Dataset (OULAD)** — 28,785 s
 <!-- TODO: architecture diagram image will be here -->
 <!-- TODO: report screenshots and video walkthrough link will be here -->
 
+```mermaid
+flowchart LR
+    subgraph Legacy["Legacy (the 'before')"]
+        SRC[("legacy_dw<br/>SQL Warehouse<br/>7 raw tables")]
+    end
+
+    subgraph Medallion["Fabric Medallion Lakehouse"]
+        BRZ["Bronze<br/>raw + _ingested_at<br/>7 Copy activities"]
+        SLV["Silver<br/>typed + cleaned<br/>quarantine framework"]
+        GLD["Gold<br/>star schema<br/>3 dims + 3 facts"]
+    end
+
+    subgraph Serve["Serving Layer"]
+        SEM["Direct Lake<br/>Semantic Model<br/>12 DAX measures · RLS"]
+        RPT["Power BI Report<br/>4 pages"]
+    end
+
+    SRC -->|Copy activity| BRZ
+    BRZ -->|PySpark| SLV
+    SLV -->|PySpark| GLD
+    GLD -->|no refresh needed| SEM
+    SEM --> RPT
+
+    ORCH["pl_medallion_orchestration<br/>Bronze → Silver → Gold → Refresh<br/>scheduled weekly"]
+    ORCH -.orchestrates.-> BRZ
+    ORCH -.orchestrates.-> SLV
+    ORCH -.orchestrates.-> GLD
+    ORCH -.orchestrates.-> SEM
+
+    style Legacy fill:#f5f5f5,stroke:#999
+    style BRZ fill:#cd7f32,color:#fff
+    style SLV fill:#c0c0c0,color:#000
+    style GLD fill:#ffd700,color:#000
+    style SEM fill:#217346,color:#fff
+    style RPT fill:#f2c811,color:#000
+```
 
 
 ## Why this project
