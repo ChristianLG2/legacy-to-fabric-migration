@@ -1,12 +1,8 @@
 # Legacy-to-Fabric Migration: OULAD Student Analytics
 
-A production-style migration of a legacy SQL Server / SSIS reporting workload into a
-**Microsoft Fabric** Lakehouse, using a Bronze/Silver/Gold **medallion architecture**,
-a **Kimball star schema**, a governed **Direct Lake** semantic model, and a multi-page
-Power BI report — orchestrated end-to-end and validated with reconciliation at every layer.
+A production-style migration of a legacy SQL Server / SSIS reporting workload into a **Microsoft Fabric** Lakehouse, using a Bronze/Silver/Gold **medallion architecture**, a **Kimball star schema**, a governed **Direct Lake** semantic model, and a multi-page Power BI report orchestrated end-to-end and validated with reconciliation at every layer.
 
-Built on the **Open University Learning Analytics Dataset (OULAD)** — 28,785 students,
-32,593 registrations, and a 10.7M-row engagement clickstream.
+Built on the **Open University Learning Analytics Dataset (OULAD)** 28,785 students, 32,593 registrations, and a 10.7M-row engagement clickstream.
 
 ```mermaid
 %%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'background': '#ffffff', 'lineColor': '#4a90d9'}, 'flowchart': {'nodeSpacing': 40, 'rankSpacing': 50, 'padding': 10}}}%%
@@ -46,51 +42,35 @@ flowchart TB
 
 ## Why this project
 
-Legacy BI stacks built on SQL Server + SSIS tend to share the same pain: tight coupling,
-no data lineage, no version control, and manual reprocessing. This project re-architects
-that pattern into a governed, reproducible Fabric Lakehouse — and validates the migration
-end-to-end with row-count reconciliation at every layer.
+Legacy BI stacks built on SQL Server + SSIS tend to share the same pain: tight coupling, no data lineage, no version control, and manual reprocessing. This project re-architects that pattern into a governed, reproducible Fabric Lakehouse, and validates the migration end-to-end with row-count reconciliation at every layer.
 
-The goal was fidelity, not just a demo: a real legacy warehouse stands in as the source,
-so the "SQL Server → Fabric" path is literal and reconcilable, with a monolithic legacy
-T-SQL transform preserved as the documented "before" baseline.
+The goal was fidelity, not just a demo: a real legacy warehouse stands in as the source, so the "SQL Server → Fabric" path is literal and reconcilable, with a monolithic legacy T-SQL transform preserved as the documented "before" baseline.
 
 ## Architecture
 
-`pl_medallion_orchestration` is the single entry point for the whole pipeline, scheduled
-weekly: it invokes `pl_bronze_ingest` (7 Copy activities, `legacy_dw` → Bronze), then chains
-into the Silver notebook, the Gold notebook, and a semantic model refresh — each step gated
-on the previous one succeeding.
+`pl_medallion_orchestration` is the single entry point for the whole pipeline, scheduled weekly: it invokes `pl_bronze_ingest` (7 Copy activities, `legacy_dw` → Bronze), then chains into the Silver notebook, the Gold notebook, and a semantic model refresh each step gated on the previous one succeeding.
 
 ![Orchestration run](assets/orchestration-pipeline.png)
 
-- **Bronze** — raw ingestion via 7 Copy activities, preserved as-is with `_ingested_at`
-  audit lineage. Reconciled against `legacy_dw` row counts on every run (asserted, not
-  eyeballed).
-- **Silver** — typed and cleaned in PySpark: imputation, standardization, derived flags, a
-  validation/quarantine framework, and clickstream aggregation (10.7M → 8.5M rows, validated
-  lossless via `assert`).
-- **Gold** — Kimball star schema: 3 dimensions, 3 fact tables, surrogate keys; every fact
-  join asserts zero null keys and the expected row count (catches fan-out immediately, not
-  after the fact). The high-volume engagement fact is tuned with Delta OPTIMIZE.
-- **Semantic model** — Direct Lake over Gold; star relationships; 12 DAX measures; dynamic
-  row-level security via a region-mapping table and Entra ID identity.
-- **Report** — four-page Power BI report (Overview, Registrations & Outcomes, Demographics
-  & Engagement, Assessments & Performance).
+- **Bronze**: raw ingestion via 7 Copy activities, preserved as-is with `_ingested_at` audit lineage. Reconciled against `legacy_dw` row counts on every run (asserted, not eyeballed).
+- **Silver**: typed and cleaned in PySpark: imputation, standardization, derived flags, a validation/quarantine framework, and clickstream aggregation (10.7M → 8.5M rows, validated lossless via `assert`).
+- **Gold**: Kimball star schema: 3 dimensions, 3 fact tables, surrogate keys; every fact join asserts zero null keys and the expected row count (catches fan-out immediately, not after the fact). The high-volume engagement fact is tuned with Delta OPTIMIZE.
+- **Semantic model**: Direct Lake over Gold; star relationships; 12 DAX measures; dynamic row-level security via a region-mapping table and Entra ID identity.
+- **Report**: four-page Power BI report (Overview, Registrations & Outcomes, Demographics & Engagement, Assessments & Performance).
 
 ![Power BI Report](assets/dashboard-demo.png)
 
 ## Data model (Gold)
 
 **Dimensions**
-- `dim_student` (28,785) — one row per student
-- `dim_module` (22) — course offerings
-- `dim_assessment` (206) — assessments
+- `dim_student` (28,785) one row per student
+- `dim_module` (22) course offerings
+- `dim_assessment` (206) assessments
 
 **Facts**
-- `fact_assessment` (173,912) — assessment scores
-- `fact_vle` (8,459,320) — aggregated engagement (clicks per student-material-day)
-- `fact_registration` (32,593) — enrollment outcomes incl. withdrawal
+- `fact_assessment` (173,912) assessment scores
+- `fact_vle` (8,459,320) aggregated engagement (clicks per student-material-day)
+- `fact_registration` (32,593) enrollment outcomes incl. withdrawal
 
 `dim_student` is a conformed dimension feeding all three facts.
 
@@ -98,55 +78,30 @@ on the previous one succeeding.
 
 ## Key engineering decisions
 
-- **Re-architect, not lift-and-shift** — the medallion pattern directly addresses the legacy
-  stack's coupling, lineage, and reprocessing problems.
-- **Reconciliation at every layer, asserted not eyeballed** — source baselines captured
-  first, every layer validated against them in code (e.g. `sum(event_count) = 10,655,280`
-  proves the clickstream aggregation was lossless, enforced with an `assert`, not just
-  printed).
-- **Quarantine over drop** — invalid records are routed to a quarantine table, never
-  silently dropped.
-- **SCD2 evaluated, then dropped** — first built `dim_student` as SCD2, but OULAD records
-  attributes per-registration with no temporal change timeline, so Type 2 versioning wasn't
-  meaningful — it also fanned out the fact join (173,912 → 174,726). Rebuilt as a clean
-  one-row-per-student dimension via `row_number()`; documented SCD2 as the design for a
-  source with real temporal change data.
-- **Surrogate keys + skinny facts** — facts carry keys and measures only; descriptive
-  attributes live in dimensions. Fan-out bugs are caught by an `assert` on row count and
+- **Re-architect, not lift-and-shift** the medallion pattern directly addresses the legacy stack's coupling, lineage, and reprocessing problems.
+- **Reconciliation at every layer, asserted not eyeballed** source baselines captured first, every layer validated against them in code (e.g. `sum(event_count) = 10,655,280` proves the clickstream aggregation was lossless, enforced with an `assert`, not just printed).
+- **Quarantine over drop** invalid records are routed to a quarantine table, never silently dropped.
+- **SCD2 evaluated, then dropped** first built `dim_student` as SCD2, but OULAD records attributes per-registration with no temporal change timeline, so Type 2 versioning wasn't meaningful it also fanned out the fact join (173,912 → 174,726). Rebuilt as a clean one-row-per-student dimension via `row_number()`; documented SCD2 as the design for a source with real temporal change data.
+- **Surrogate keys + skinny facts** facts carry keys and measures only; descriptive attributes live in dimensions. Fan-out bugs are caught by an `assert` on row count and
   null-key checks immediately after every join, not discovered downstream.
-- **Performance tuning** — the 8.5M-row engagement fact is compacted with Delta OPTIMIZE;
-  file count is captured before/after each run rather than cited as a fixed number, since
-  it varies run to run.
+- **Performance tuning** the 8.5M-row engagement fact is compacted with Delta OPTIMIZE; file count is captured before/after each run rather than cited as a fixed number, since it varies run to run.
 
 ## Governance
 
-- **Row-level security (RLS)** — dynamic, table-driven: a `security_region_map` table
-  (`user_email` → `region`) filters `dim_student` via DAX, propagating through the star to
-  all three facts. Adding a user is an `INSERT`, not a role edit.
-- **Column-level / object-level security — evaluated, not implemented.** `imd_band` (a
-  socioeconomic indicator) was identified as the sensitive column worth restricting.
-  Object-level security (OLS) at the semantic-model layer — the natural fit alongside the
-  existing DAX-based RLS — isn't currently exposed in Fabric's web-based semantic model
-  editor; it requires an external tool (Tabular Editor) connecting over the XMLA endpoint.
-  Documented here as the next governance layer to add, same as SCD2 above: evaluated
-  deliberately, not overlooked.
-- **Assume referential integrity** enabled on fact-to-dimension relationships, validated by
-  zero-orphan key checks, for faster Direct Lake joins.
+- **Row-level security (RLS)** dynamic, table-driven: a `security_region_map` table (`user_email` → `region`) filters `dim_student` via DAX, propagating through the star to all three facts. Adding a user is an `INSERT`, not a role edit.
+- **Column-level / object-level security evaluated, not implemented.** `imd_band` (a socioeconomic indicator) was identified as the sensitive column worth restricting. Object-level security (OLS) at the semantic-model layer the natural fit alongside the existing DAX-based RLS isn't currently exposed in Fabric's web-based semantic model editor; it requires an external tool (Tabular Editor) connecting over the XMLA endpoint. Documented here as the next governance layer to add, same as SCD2 above: evaluated deliberately, not overlooked.
+- **Assume referential integrity** enabled on fact-to-dimension relationships, validated by zero-orphan key checks, for faster Direct Lake joins.
 
 ## Headline findings
 
-- **~31% of registrations end in withdrawal** — the dataset's primary attrition signal.
-- **Lower prior education strongly predicts withdrawal** — 43% (no formal quals) vs. 23%
-  (postgraduate).
+- **~31% of registrations end in withdrawal** the dataset's primary attrition signal.
+- **Lower prior education strongly predicts withdrawal** 43% (no formal quals) vs. 23% (postgraduate).
 - **Coursework outscores exams** (CMA/TMA higher than final exams).
-- **Attrition is via withdrawal, not failure** — pass rates run 89–98%, so the risk is
-  students leaving, not failing.
+- **Attrition is via withdrawal, not failure** pass rates run 89–98%, so the risk is students leaving, not failing.
 
 ## Tech stack
 
-Microsoft Fabric · OneLake · Delta Lake · PySpark · Spark SQL · T-SQL · Kimball dimensional
-modeling · Direct Lake · Power BI · DAX (RLS) · Entra ID · Fabric Data Pipelines · Git
-integration
+Microsoft Fabric · OneLake · Delta Lake · PySpark · Spark SQL · T-SQL · Kimball dimensional modeling · Direct Lake · Power BI · DAX (RLS) · Entra ID · Fabric Data Pipelines · Git integration
 
 ## Repository structure
 
@@ -170,15 +125,11 @@ legacy-to-fabric-migration/
 
 ## Documentation
 
-- `docs/migration-strategy.md` — as-is / to-be architecture, table mapping, cutover and
-  reconciliation approach.
-- `docs/legacy_baseline.md` — the legacy system's structure, type debt, and data-quality
-  gaps.
-- `docs/diagnostics.sql` — source data inspection with findings and decisions.
-- `docs/interview-notes.md` — engineering decisions, rationale, and metrics captured during
-  the build.
+- `docs/migration-strategy.md` as-is / to-be architecture, table mapping, cutover and reconciliation approach.
+- `docs/legacy_baseline.md` the legacy system's structure, type debt, and data-quality gaps.
+- `docs/diagnostics.sql` source data inspection with findings and decisions.
+- `docs/interview-notes.md` engineering decisions, rationale, and metrics captured during the build.
 
 ## Dataset
 
-Open University Learning Analytics Dataset (OULAD) — Kuzilek, J., Hlosta, M., & Zdrahal, Z.
-(2017). Publicly available for research use.
+Open University Learning Analytics Dataset (OULAD) Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017). Publicly available for research use.
