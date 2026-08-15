@@ -64,6 +64,13 @@
   three facts.
 - **Mapping table kept unrelated to the star:** queried via DAX lookup rather than a
   relationship, to avoid a many-to-many that would mis-filter.
+  - **OLS evaluated, not implemented:** `imd_band` (socioeconomic indicator) identified as
+  the column worth restricting — same layer as RLS (semantic model, role-based) would be
+  the consistent choice over SQL-endpoint CLS, but Fabric's web-based semantic model editor
+  doesn't expose OLS natively; it requires Tabular Editor over the XMLA endpoint. Framing
+  for the interview: *"I identified the column, chose the right layer for consistency with
+  my existing RLS, and the blocker was tooling access, not the decision — same kind of
+  judgment call as the SCD2 evaluation, just not yet built."*
 
 ## Orchestration
 
