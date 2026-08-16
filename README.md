@@ -86,6 +86,29 @@ The goal was fidelity, not just a demo: a real legacy warehouse stands in as the
   null-key checks immediately after every join, not discovered downstream.
 - **Performance tuning** the 8.5M-row engagement fact is compacted with Delta OPTIMIZE; file count is captured before/after each run rather than cited as a fixed number, since it varies run to run.
 
+
+## CI/CD
+
+A three-stage Fabric Deployment Pipeline (Development to Test to Production) promotes every item, Lakehouses, notebooks, pipelines, the Warehouse, the semantic model, and the report, across three independent Fabric Trial workspaces. Each stage was verified with a real, unattended `pl_medallion_orchestration` run, 'not just a successful deployment, but Bronze through the semantic model refresh actually passing its reconciliation asserts in each environment.
+
+![Deployment pipeline](assets/deployment-pipeline.png)
+
+**What deployment actually carries 'and what it doesn't.** Fabric's Deployment
+Pipelines promote item *definitions*, not their contents. Promoting to a new stage does not carry:
+- **Delta table data** a promoted Lakehouse is a real, working item with zero rows.
+- **Files-section content** raw CSVs sitting in a Lakehouse's `Files/` folder don't travel with the deployment; they have to be re-uploaded per stage.
+- **Working connections** Copy activities in a promoted pipeline reference connection objects that can silently fail to rebind to the new stage's own data sources, even when every visible setting (workspace ID, database ID) looks correct.
+
+Each of these surfaced as a real failure during promotion to Test, diagnosed from the raw error text rather than assumed:
+- An empty destination table produces a `SqlFailedToConnect` / "database not found or insufficient permissions" error, misleading on first read, since the database *is* found; the actual issue is zero rows, not access.
+- A missing raw file produces a `PathNotFound` error at the exact `Files/raw/` path that never got carried across.
+- A genuinely stale connection object, same database, same credentials, still failing, was resolved by creating one new Copy activity from scratch. That single fresh connection cascaded to fix the other six activities sharing the same underlying stale reference, without needing to rebuild all seven by hand.
+
+**Continuous Integration** runs via GitHub Actions on every push to `main`,
+validating: all `pipeline-content.json` files are well-formed JSON, all `.platform` item-metadata files are well-formed JSON, and every `notebook-content.py` file compiles without a Python syntax error. This is a syntax-level check, not a semantic one, it would not, for example, have caught an empty-but-valid pipeline (the Bronze gap described earlier in this README), but it does catch real corruption: a bad merge, a manual edit that breaks JSON structure, or a notebook cell committed with a typo before ever being run.
+
+
+
 ## Governance
 
 - **Row-level security (RLS)** dynamic, table-driven: a `security_region_map` table (`user_email` to `region`) filters `dim_student` via DAX, propagating through the star to all three facts. Adding a user is an `INSERT`, not a role edit.
