@@ -1,0 +1,12 @@
+# Raw source data (large, publicly available — see README for source)
+data/raw/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Python (if you ever add local scripts/venvs alongside this)
+__pycache__/
+*.pyc
+.venv/
