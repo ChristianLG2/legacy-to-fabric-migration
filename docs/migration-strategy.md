@@ -1,14 +1,12 @@
 # Migration Strategy: Legacy SQL Server / SSIS to Microsoft Fabric
 
 How a coupled, single-pass legacy reporting workload was re-architected into a governed, layered Microsoft Fabric Lakehouse, and how that migration would be validated before cutover.
-
 Dataset: Open University Learning Analytics Dataset (OULAD), 28,785 students, 32,593 registrations, 10.7M-row engagement clickstream, modeled as a legacy SQL Server warehouse and migrated end to end.
 
 
 ## 1. As-Is  the legacy state
 
 The legacy reporting workload is a single SQL warehouse (`legacy_dw`) holding seven raw tables, transformed by one monolithic T-SQL script (`legacy/monolithic_transform.sql`) that produces a wide denormalized reporting table in a single pass.
-
 What it does and why it is limiting:
 
 - **No layering.** Raw tables go straight to a final reporting table in one query, no staging, no intermediate checkpoints. There is nowhere to inspect, validate, or reprocess a middle step.
@@ -57,11 +55,8 @@ Each layer exists for a reason the legacy stack could not satisfy: Bronze buys r
 ## 4. Migration approach re-architect, not lift-and-shift
 
 The migration deliberately **re-architects** into a medallion Lakehouse rather than lifting-and-shifting the monolithic transform as-is.
-
 A lift-and-shift would have preserved the legacy stack's core problems, no layering, no lineage, no reproducibility, mixed grain, just on newer infrastructure. The pain was architectural, not platform-specific, so moving the same single-pass logic to Fabric would have moved the same liabilities with it.
-
 Re-architecting addresses each root cause directly: layering restores inspectability and incremental reprocessing; separating ingestion from transformation buys replayability; a dimensional Gold layer fixes the grain problem the monolith papered over; and set-based Spark aggregation replaces the per-row correlated subqueries. The cost is more upfront design and more moving parts, justified here because the workload is meant to be maintained, governed, and extended, not run once.
-
 A lift-and-shift would be the right call only for a workload being retired soon, or under a hard deadline where modernization could follow later. This one is the opposite case.
 
 
@@ -80,5 +75,4 @@ The migration is de-risked by running legacy and Fabric in parallel and reconcil
 ## 6. Outcome
 
 A reporting workload that was coupled, single-pass, unversioned, and slow is now layered, reconciled at every stage, version-controlled, governed with row-level security, orchestrated on a schedule, and served live through Direct Lake.
-
 Key figures: 10.7M to 8.5M clickstream aggregation (lossless) · ~31% withdrawal rate surfaced · 0 orphan keys across fact-to-dimension joins · OPTIMIZE compaction on the engagement fact · 28,785 students / 32,593 registrations / 173,912 assessments modeled.
