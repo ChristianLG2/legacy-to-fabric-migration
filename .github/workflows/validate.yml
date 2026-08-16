@@ -1,0 +1,61 @@
+name: Validate Fabric Items
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate all pipeline-content.json files
+        run: |
+          echo "Checking Data Pipeline JSON files..."
+          fail=0
+          for f in $(find . -name "pipeline-content.json"); do
+            if ! python -m json.tool "$f" > /dev/null 2>&1; then
+              echo "INVALID JSON: $f"
+              fail=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          exit $fail
+
+      - name: Validate all .platform files
+        run: |
+          echo "Checking .platform files..."
+          fail=0
+          for f in $(find . -name ".platform"); do
+            if ! python -m json.tool "$f" > /dev/null 2>&1; then
+              echo "INVALID JSON: $f"
+              fail=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          exit $fail
+
+      - name: Validate all notebook-content.py files (syntax check)
+        run: |
+          echo "Checking Notebook Python syntax..."
+          fail=0
+          for f in $(find . -name "notebook-content.py"); do
+            if ! python -m py_compile "$f" 2>&1; then
+              echo "SYNTAX ERROR: $f"
+              fail=1
+            else
+              echo "OK: $f"
+            fi
+          done
+          exit $fail
