@@ -91,7 +91,7 @@ The goal was fidelity, not just a demo: a real legacy warehouse stands in as the
 
 A three-stage Fabric Deployment Pipeline (Development to Test to Production) promotes every item, Lakehouses, notebooks, pipelines, the Warehouse, the semantic model, and the report, across three independent Fabric Trial workspaces. Each stage was verified with a real, unattended `pl_medallion_orchestration` run, 'not just a successful deployment, but Bronze through the semantic model refresh actually passing its reconciliation asserts in each environment.
 
-![Deployment pipeline](assets/deployment-pipeline.png)
+![Deployment pipeline](assets/ci-cd-pipeline.png)
 
 **What deployment actually carries 'and what it doesn't.** Fabric's Deployment
 Pipelines promote item *definitions*, not their contents. Promoting to a new stage does not carry:
