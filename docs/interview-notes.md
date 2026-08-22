@@ -1,7 +1,6 @@
 # Interview Notes: Legacy-to-Fabric Migration
 
-Running capture of interview-relevant decisions, lessons, and metrics from the
-build. Organized by theme.
+Running capture of interview-relevant decisions, lessons, and metrics from the build. Organized by topic.
 
 ---
 
@@ -85,6 +84,14 @@ build. Organized by theme.
 - **Conformed dimension:** `dim_student` feeds all three facts through single-direction many-to-one relationships, one dimension, consistent filtering across the star.
 - **Assume referential integrity:** enabled on fact -> dim relationships *because* the zero-orphan check passed first, it speeds Direct Lake joins but is only safe once RI is validated. Enabling it without the check would be a latent bug.
 - **DAX discipline:** `DIVIDE()` not `/` (null-safe on divide-by-zero); a "per X" measure names its denominator (caught an inverted clicks-per-student early); weighted score via `SUMX` + `RELATED` to reach across the relationship.
+
+## BI validation & the Python follow-up
+
+- **Group-size checks before trusting a headline finding:** the education gradient (23%–43% withdrawal) initially looked driven by two small extreme groups (n=252, n=306). Checked directly — the gradient holds across all five bands, including the two largest (12,355 and 11,780 students), so the small groups extend a real pattern rather than create one. Same discipline applied to region (all 11 groups >1,000 students — safe) and IMD band (all bands >2,200 — safe, and the cleanest gradient of the three).
+- **A vague finding turned into a null result, deliberately:** "pass rates and scores vary by region" was checked and found false — withdrawal is flat (23%–35%) across all 11 UK regions, no meaningful pattern. Kept as a finding anyway, reframed as "geography isn't where this outcome gap lives" — ruling something out is as useful to a stakeholder as finding something, and more honest than manufacturing a pattern from noise.
+- **Caught a real threshold bug via source documentation, not intuition:** the `pass rate` measure used `score > 40`; the original OULAD paper (Kuzilek, Hlosta, & Zdrahal, 2017) states 40 is the passing threshold, i.e. `>= 40`. Fixed the operator, re-ran, every per-module pass rate shifted up (89–98% → 91–98%) — students scoring exactly 40 had been silently misclassified as failing.
+- **Distinguished "engagement varies by module" from "engagement predicts outcome":** the report visually shows a 20x spread in average clicks across modules — suggestive, not proof of a student-level relationship. Built a separate Python analysis (pandas/scipy, connected to Gold via Entra ID device-code auth) to test it properly: point-biserial correlation r = -0.356, p < 0.000001, n = 32,593 — students who stayed enrolled clicked a median of 994 times vs. 90 for students who withdrew, an 11x gap. Real and substantial, but documented explicitly as correlation, not causation — a causal claim would need to control for prior academic history and module.
+- **BI and Python as complementary layers, not redundant ones:** the semantic model surfaces the question (engagement looks uneven); the correlation test answers it (does it actually predict outcome). Deliberately kept the Python scope narrow — one hypothesis, one test — rather than open-ended exploration once a stats environment was available.
 
 ## Governance dynamic RLS
 
