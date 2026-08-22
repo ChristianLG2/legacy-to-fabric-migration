@@ -170,8 +170,8 @@ legacy-to-fabric-migration/
 - `docs/legacy_baseline.md` the legacy system's structure, type debt, and data-quality gaps.
 - `docs/diagnostics.sql` source data inspection with findings and decisions.
 - `docs/interview-notes.md` engineering decisions, rationale, and metrics captured during the build.
-- `docs/bi-report-summary.md` — BI findings, recommendations, and statistical validation, written for readers without Power BI access.
-- `analysis/engagement_outcome_validation.ipynb` — Python/scipy statistical test validating the engagement-outcome relationship the BI report surfaces.
+- `docs/bi-report-summary.md` BI findings, recommendations, and statistical validation, written for readers without Power BI access.
+- `analysis/engagement_outcome_validation.ipynb` Python/scipy statistical test validating the engagement-outcome relationship the BI report surfaces.
 
 ## Dataset
 
