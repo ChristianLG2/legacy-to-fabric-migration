@@ -6,7 +6,7 @@ A companion to the interactive Power BI report (`oulad-analytics-report.Report`)
 
 Analyzes student outcomes and learning engagement across 22 course presentations in the Open University Learning Analytics Dataset (OULAD), covering 28,785 students and 32,593 registrations. Migrated from a legacy SQL Server warehouse into a Microsoft Fabric Lakehouse using a Bronze/Silver/Gold medallion architecture, then modeled into a star schema for analysis.
 
-![Executive Report overview](assets/executive-report.png)
+![Executive Report overview](../assets/executive-report.png)
 
 ## Key Findings
 
@@ -25,7 +25,7 @@ All three findings below were checked against actual group sizes before being re
 
 ## Engagement Is a Real Predictor, Not Just a Visual Impression
 
-![Engagement by outcome median 994 clicks (stayed) vs. 90 (withdrew)](assets/engagement_by_outcome.png)
+![Engagement by outcome median 994 clicks (stayed) vs. 90 (withdrew)](../assets/engagement_by_outcome.png)
 
 The report shows engagement (clicks) varies sharply by module, up to a 20x spread. That alone doesn't prove engagement predicts outcome, so it was tested directly with a separate statistical analysis (see [`analysis/engagement_outcome_validation.ipynb`](../analysis/engagement_outcome_validation.ipynb)): students who stayed enrolled clicked a median of 994 times; students who withdrew clicked a median of 90, an 11x gap, with a moderate-to-strong statistical correlation (r = -0.36, p < 0.000001, n = 32,593).
 
