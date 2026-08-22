@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "57bf63f4a80803bc7a84",
+  "position": {
+    "x": 338.75040690104163,
+    "y": 578.75325520833326,
+    "z": 11000,
+    "height": 296.66666666666669,
+    "width": 620,
+    "tabOrder": 28000
+  },
+  "visualGroup": {
+    "displayName": "Month Year Spark",
+    "groupMode": "ScaleMode"
+  }
+}

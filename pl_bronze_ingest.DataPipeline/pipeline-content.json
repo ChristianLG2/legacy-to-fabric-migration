@@ -488,9 +488,9 @@
                 "properties": {
                   "type": "DataWarehouse",
                   "typeProperties": {
-                    "artifactId": "3b54aabd-01fc-a4e8-41ea-039f69ba65f8",
-                    "endpoint": "z5arkpomu4gexlzugghyv2joki-jktydzbmt5tulhehinmq6ybpy4.datawarehouse.fabric.microsoft.com",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                    "artifactId": "3dfda2f9-0024-4b7b-9c86-e10773ba03e4",
+                    "endpoint": "z5arkpomu4gexlzugghyv2joki-zjvq5rcuuk7etg5rmdohniu52m.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "c40e6bca-a254-49be-9bb1-60dc76a29dd3"
                   },
                   "annotations": []
                 }
@@ -515,8 +515,8 @@
                 "properties": {
                   "type": "Lakehouse",
                   "typeProperties": {
-                    "artifactId": "a71f28f4-6fb0-b7e9-4584-8970877ea43f",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "artifactId": "f8996c9a-f829-4daf-bb40-bfbaff4b262b",
+                    "workspaceId": "c40e6bca-a254-49be-9bb1-60dc76a29dd3",
                     "rootFolder": "Tables"
                   },
                   "annotations": []

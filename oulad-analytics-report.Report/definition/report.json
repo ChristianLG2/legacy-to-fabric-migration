@@ -1,0 +1,143 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY26SU05",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "report": "3.3.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "Temperature",
+      "reportVersionAtImport": {
+        "visual": "2.10.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY26SU05",
+          "path": "BaseThemes/CY26SU05.json",
+          "type": "BaseTheme"
+        },
+        {
+          "name": "Temperature",
+          "path": "BuiltInThemes/Temperature.json",
+          "type": "CustomTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "45387473912396802592717.png",
+          "path": "45387473912396802592717.png",
+          "type": "Image"
+        },
+        {
+          "name": "assessment16958732743493077.png",
+          "path": "assessment16958732743493077.png",
+          "type": "Image"
+        },
+        {
+          "name": "assessment6743064851949792.png",
+          "path": "assessment6743064851949792.png",
+          "type": "Image"
+        },
+        {
+          "name": "avg_Pofit_Colour5299252316314982.png",
+          "path": "avg_Pofit_Colour5299252316314982.png",
+          "type": "Image"
+        },
+        {
+          "name": "clicks9578996308221472.png",
+          "path": "clicks9578996308221472.png",
+          "type": "Image"
+        },
+        {
+          "name": "cpstudent19530862033974095.webp",
+          "path": "cpstudent19530862033974095.webp",
+          "type": "Image"
+        },
+        {
+          "name": "Profit_Colour39443833552022944.png",
+          "path": "Profit_Colour39443833552022944.png",
+          "type": "Image"
+        },
+        {
+          "name": "SchoolRegistration15633300567532038.png",
+          "path": "SchoolRegistration15633300567532038.png",
+          "type": "Image"
+        },
+        {
+          "name": "student2836400752873336.png",
+          "path": "student2836400752873336.png",
+          "type": "Image"
+        },
+        {
+          "name": "total_reg6119500536819841.png",
+          "path": "total_reg6119500536819841.png",
+          "type": "Image"
+        },
+        {
+          "name": "withdrawal7094378515861752.png",
+          "path": "withdrawal7094378515861752.png",
+          "type": "Image"
+        },
+        {
+          "name": "wrate48761650260301925.jpg",
+          "path": "wrate48761650260301925.jpg",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}

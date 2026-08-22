@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "a07435901a9597b99b8e",
+  "position": {
+    "x": 535.97951253255189,
+    "y": 143.606689453125,
+    "z": 6000,
+    "height": 60,
+    "width": 60,
+    "tabOrder": 18000
+  },
+  "visualGroup": {
+    "displayName": "Avg. Profit",
+    "groupMode": "ScaleMode"
+  }
+}

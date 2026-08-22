@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "7bbbe537c592e0e81ec6",
+  "position": {
+    "x": 0,
+    "y": 450.00000000000006,
+    "z": 24000,
+    "height": 450.00000000000006,
+    "width": 280,
+    "tabOrder": 13000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "• Coursework outscores exams CMA and TMA average higher than final exams (~76 vs. lower), typical of continuous-assessment formats."
+                  }
+                ],
+                "horizontalTextAlignment": "center"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": " • Pass rates are high across all modules (89–98%), reflecting that submitted assessments usually pass."
+                  }
+                ],
+                "horizontalTextAlignment": "center"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": " • Average scores are consistent across modules (~70–80), with little course-to-course variation."
+                  }
+                ],
+                "horizontalTextAlignment": "center"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": ""
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "• Weighted average score (71.32) runs meaningfully below the flat average (75.80), a ~4.5 point gap driven by heavier-weighted assessments (final exams) scoring lower than lighter-weighted coursework. Confirms the \"coursework outscores exams\" finding independently, and shows why weighting matters: a flat average alone would overstate how strong final performance actually is."
+                  }
+                ],
+                "horizontalTextAlignment": "center"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

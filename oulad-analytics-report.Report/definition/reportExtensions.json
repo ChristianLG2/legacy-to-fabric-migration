@@ -1,0 +1,102 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/reportExtension/1.0.0/schema.json",
+  "name": "extension",
+  "entities": [
+    {
+      "name": "fact_assessment",
+      "measures": [
+        {
+          "name": "pass rate",
+          "dataType": "Double",
+          "expression": "ROUND(DIVIDE(CALCULATE(COUNTROWS(fact_assessment), fact_assessment[score] >= 40),COUNTROWS(fact_assessment)),2)",
+          "formatString": "General Number"
+        },
+        {
+          "name": "Weighted score",
+          "dataType": "Double",
+          "expression": "ROUND(DIVIDE(SUMX(fact_assessment, fact_assessment[score] * RELATED(dim_assessment[weight])), SUMX(fact_assessment, RELATED(dim_assessment[weight]))),2)",
+          "formatString": "General Number"
+        }
+      ]
+    },
+    {
+      "name": "fact_registration",
+      "measures": [
+        {
+          "name": "total registrations",
+          "dataType": "Double",
+          "expression": "COUNTROWS(fact_registration)",
+          "formatString": "General Number"
+        },
+        {
+          "name": "withdrawal count",
+          "dataType": "Double",
+          "expression": "CALCULATE(COUNTROWS(fact_registration), fact_registration[is_withdrawn] = TRUE())",
+          "formatString": "General Number"
+        },
+        {
+          "name": "withdrawal rate",
+          "dataType": "Double",
+          "expression": "ROUND(DIVIDE(fact_registration[withdrawal count], fact_registration[total registrations]),2)",
+          "formatString": "General Number",
+          "references": {
+            "measures": [
+              {
+                "schema": "extension",
+                "entity": "fact_registration",
+                "name": "withdrawal count"
+              },
+              {
+                "schema": "extension",
+                "entity": "fact_registration",
+                "name": "total registrations"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "fact_vle",
+      "measures": [
+        {
+          "name": "Avg Clicks per student",
+          "dataType": "Double",
+          "expression": "DIVIDE([total clicks], [total students])",
+          "formatString": "General Number",
+          "references": {
+            "measures": [
+              {
+                "entity": "fact_vle",
+                "name": "total clicks"
+              },
+              {
+                "entity": "dim_student",
+                "name": "total students"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Avg clicks per registration",
+          "dataType": "Double",
+          "expression": "DIVIDE([total clicks], [total registrations])",
+          "formatString": "General Number",
+          "references": {
+            "measures": [
+              {
+                "entity": "fact_vle",
+                "name": "total clicks"
+              },
+              {
+                "schema": "extension",
+                "entity": "fact_registration",
+                "name": "total registrations"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

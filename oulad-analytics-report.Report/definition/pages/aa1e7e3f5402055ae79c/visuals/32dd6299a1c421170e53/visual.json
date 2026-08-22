@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "32dd6299a1c421170e53",
+  "position": {
+    "x": 351.66666666666669,
+    "y": 581.66666666666674,
+    "z": 12000,
+    "height": 296.66666666666669,
+    "width": 1148.3333333333335,
+    "tabOrder": 29000
+  },
+  "visualGroup": {
+    "displayName": "Treemap",
+    "groupMode": "ScaleMode"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "d03061ff4853100e7099",
+  "position": {
+    "x": 207.83074015202442,
+    "y": 35.63975154321939,
+    "z": 6000,
+    "height": 49.184210526315795,
+    "width": 22.063492063492063,
+    "tabOrder": 0
+  },
+  "visualGroup": {
+    "displayName": "Add Note Button",
+    "groupMode": "ScaleMode"
+  },
+  "parentGroupName": "fc3db3001a8062bdc677"
+}

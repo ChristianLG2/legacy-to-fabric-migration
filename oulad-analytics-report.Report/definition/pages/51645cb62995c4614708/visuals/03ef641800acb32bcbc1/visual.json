@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "03ef641800acb32bcbc1",
+  "position": {
+    "x": 323.33333333333337,
+    "y": 255,
+    "z": 7000,
+    "height": 295,
+    "width": 630,
+    "tabOrder": 22000
+  },
+  "visualGroup": {
+    "displayName": "Hero Viz",
+    "groupMode": "ScaleMode"
+  }
+}

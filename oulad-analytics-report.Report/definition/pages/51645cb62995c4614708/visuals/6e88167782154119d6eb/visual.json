@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "6e88167782154119d6eb",
+  "position": {
+    "x": 1137.2295125325525,
+    "y": 114.356689453125,
+    "z": 4000,
+    "height": 119,
+    "width": 280,
+    "tabOrder": 17000
+  },
+  "visualGroup": {
+    "displayName": "Net Profit Card",
+    "groupMode": "ScaleMode"
+  }
+}

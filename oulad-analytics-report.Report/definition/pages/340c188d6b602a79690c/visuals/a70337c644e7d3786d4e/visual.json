@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "a70337c644e7d3786d4e",
+  "position": {
+    "x": 1024.2857142857144,
+    "y": 588.57142857142856,
+    "z": 5000,
+    "height": 280,
+    "width": 554.28571428571433
+  },
+  "visualGroup": {
+    "displayName": "Revenue vs Profit",
+    "groupMode": "ScaleMode"
+  }
+}
