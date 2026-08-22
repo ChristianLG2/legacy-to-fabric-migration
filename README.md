@@ -113,8 +113,6 @@ Each of these surfaced as a real failure during promotion to Test, diagnosed fro
 **Continuous Integration** runs via GitHub Actions on every push to `main`,
 validating: all `pipeline-content.json` files are well-formed JSON, all `.platform` item-metadata files are well-formed JSON, and every `notebook-content.py` file compiles without a Python syntax error. This is a syntax-level check, not a semantic one, it would not, for example, have caught an empty-but-valid pipeline (the Bronze gap described earlier in this README), but it does catch real corruption: a bad merge, a manual edit that breaks JSON structure, or a notebook cell committed with a typo before ever being run.
 
-
-
 ## Governance
 
 - **Row-level security (RLS)** dynamic, table-driven: a `security_region_map` table (`user_email` to `region`) filters `dim_student` via DAX, propagating through the star to all three facts. Adding a user is an `INSERT`, not a role edit.
@@ -138,6 +136,7 @@ Microsoft Fabric · OneLake · Delta Lake · PySpark · Spark SQL · T-SQL · Ki
 legacy-to-fabric-migration/
 ├── docs/                              # diagnostics, legacy baseline, migration strategy, interview notes
 ├── assets/                            # screenshots referenced in this README
+├── analysis/                          # contains ad-hoc analysis on Jupyter Notebook and SQL queries
 ├── legacy/                            # monolithic legacy T-SQL transform (the "before" baseline)
 ├── legacy_dw.Warehouse/               # legacy SQL Server stand-in
 ├── CopyJob_1.CopyJob, CopyJob_2.CopyJob/  # load raw CSVs into legacy_dw
