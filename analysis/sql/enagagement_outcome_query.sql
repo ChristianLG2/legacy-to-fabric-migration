@@ -1,8 +1,6 @@
--- Pulls student+module grain engagement and outcome data for the
--- engagement/withdrawal correlation analysis.
--- fact_vle is aggregated to student+module first (it's stored at a finer
--- student+module+day grain) to match fact_registration's grain before
--- joining -- joining at the wrong grain would fan out the result.
+-- Pulls student+module grain engagement and outcome data for the engagement/withdrawal correlation analysis.
+-- fact_vle is aggregated to student+module first (it's stored at a finer student + module + day grain) to match fact_registration's grain before joining 
+-- joining at the wrong grain would fan out the result.
 
 WITH student_clicks AS (
     SELECT student_sk, module_sk, SUM(total_clicks) AS total_clicks
