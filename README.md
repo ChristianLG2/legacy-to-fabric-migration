@@ -40,6 +40,12 @@ flowchart TB
     linkStyle default stroke:#4a90d9,stroke-width:2px
 ```
 
+## Looking for something specific?
+
+- **Data Engineering:** Keep reading below for architecture, CI/CD, and engineering decisions.
+- **BI & Data Analysis:** See [`docs/bi-report-summary.md`](docs/bi-report-summary.md) for the findings, recommendations, and statistical validation no Power BI required to read it.
+
+
 ## Why this project
 
 Legacy BI stacks built on SQL Server + SSIS tend to share the same pain: tight coupling, no data lineage, no version control, and manual reprocessing. This project re-architects that pattern into a governed, reproducible Fabric Lakehouse, and validates the migration end-to-end with row-count reconciliation at every layer.
